@@ -1,0 +1,17 @@
+/* Default styles for screens larger than 1024px */
+.custom-bar-chart {
+    width: 800px;
+    height: 320px;
+  }
+  .recharts-wrapper{
+    width: 500px;
+    height: 300px;
+  }
+  /* Styles for screens up to 1024px */
+  @media (max-width: 1024px) {
+    .custom-bar-chart {
+      width: 600px;
+      height: 240px;
+    }
+  }
+  
