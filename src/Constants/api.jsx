@@ -1,5 +1,5 @@
-export const userAPI = "http://profinder.site/";
-export const professionalsAPI = "http://profinder.site/professionals/";
-export const adminAPI = "http://profinder.site/admin/";
+export const userAPI = "https://profinder.site/";
+export const professionalsAPI = "https://profinder.site/professionals/";
+export const adminAPI = "https://profinder.site/admin/";
 
 
