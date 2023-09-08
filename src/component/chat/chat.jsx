@@ -70,7 +70,7 @@ useEffect(() => {
 
   useEffect(() => {
     // Create a socket connection when the component mounts
-    const newSocket = io("http://localhost:4000/chat");
+    const newSocket = io("https://profinder.site/chat");
     setSocket(newSocket);
 
     // Set up event listeners for socket events
