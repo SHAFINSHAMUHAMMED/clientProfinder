@@ -60,7 +60,9 @@ function userHome() {
       } else {
         setcategory("");
       }
-    });
+    }).catch((error)=>{
+      console.log(error);
+    })
     if (token && !userLocation) {
       handleOpenLocationPopup();
     }
@@ -69,8 +71,8 @@ function userHome() {
   const handleSearchChange = (event) => {
     const query = event.target.value;
     setSearchQuery(query);
-    const filtered = category.filter((category) =>
-      category.name.toLowerCase().includes(query.toLowerCase())
+    const filtered = category?.filter((category) =>
+      category.name?.toLowerCase().includes(query.toLowerCase())
     );
     setFilteredCategories(filtered);
   };
@@ -107,7 +109,7 @@ function userHome() {
     );
   };
   const handleClick = (type) => {
-    const filtered = category.filter((category) =>
+    const filtered = category?.filter((category) =>
       category.name.toLowerCase().includes(type.toLowerCase())
     );
     const Category = filtered[0].name;

@@ -1,15 +1,12 @@
 import { Fragment, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useNavigate, Link } from "react-router-dom";
-import {
-  UserLogout,
-} from "../../../Redux/userState";
+import { UserLogout } from "../../../Redux/userState";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import userAxiosInstance from "../../../Axios/userAxios";
 import Cookies from "js-cookie";
 import { decodeJwt } from "jose";
-
 
 export default function Example() {
   const navigation = [
@@ -18,18 +15,18 @@ export default function Example() {
     { name: "Chat", href: "#", current: false },
     { name: "Contact", href: "#", current: false },
   ];
-  
+
   function classNames(...classNamees) {
     return classNamees.filter(Boolean).join(" ");
   }
-  let username=''
+  let username = "";
   const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(0);
   const [userData, setuserData] = useState();
   const dispatch = useDispatch();
-   username = useSelector((state) => state.user.UserName);
   const token = useSelector((state) => state.user.Token);
   const userPhoto = useSelector((state) => state.user.Image);
+  username = useSelector((state) => state.user.UserName);
   const userAxios = userAxiosInstance();
   let userid = null;
   if (username) {
@@ -44,17 +41,16 @@ export default function Example() {
     }
     return true; // If there's no token, it is expired
   };
-  useEffect(() => {
-    const expired = isTokenExpired();
-    if (expired) {
-      dispatch(UserLogout());
-      navigate("/login");
-    }
-  }, []);
+  // useEffect(() => {
+  //   const expired = isTokenExpired();
+  //   if (expired) {
+  //     dispatch(UserLogout());
+  //     navigate("/login");
+  //   }
+  // }, []);
   const logout = () => {
     if (username) {
       dispatch(UserLogout());
-      // dispatch(userId({id:null}))
       userid = null;
       setuserData("");
       navigate("/login");
@@ -70,25 +66,29 @@ export default function Example() {
     setActiveIndex(index);
     navigate(href);
   };
-    useEffect(() => {
-      if(userid){
-      userAxios.get(`/userDetails?userId=${userid}`).then((res) => {
-        const data = res.data.data;
-        if (data) {
-          if (data.isBlocked) {
-            dispatch(UserLogout());
-            // dispatch(userImage(""));
-          } else {
-            setuserData(data);
+  useEffect(() => {
+    if (userid) {
+      userAxios
+        .get(`/userDetails?userId=${userid}`)
+        .then((res) => {
+          const data = res.data.data;
+          if (data) {
+            if (data.isBlocked) {
+              dispatch(UserLogout());
+            } else {
+              setuserData(data);
+            }
           }
-        }
-      });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
-    }, []);
+  }, []);
 
   const handleWalletClick = () => {
     // Use the navigate function to navigate to /wallet and pass data
-    navigate('/wallet');
+    navigate("/wallet");
   };
 
   return (
@@ -138,11 +138,9 @@ export default function Example() {
                         } else if (item.name === "Services") {
                           navigate("/Services ");
                         } else if (item.name === "Chat") {
-                          navigate(
-                            '/chat'
-                          );
+                          navigate("/chat");
                         } else if (item.name === "Contact") {
-                          ("/"); //no contact page now
+                          navigate("/contact");
                         }
                       }}
                       className={classNames(
@@ -214,7 +212,7 @@ export default function Example() {
                       <Menu.Item>
                         {({ active }) => (
                           <a
-                          onClick={handleWalletClick}
+                            onClick={handleWalletClick}
                             className={classNames(
                               active ? "bg-gray-100" : "",
                               "block px-4 py-2 text-sm text-gray-700"
@@ -290,12 +288,10 @@ export default function Example() {
                       navigate("/");
                     } else if (item.name === "Services") {
                       navigate("/Services");
-                    }else if (item.name === "Chat") {
-                      navigate(
-                        '/chat'
-                      );
+                    } else if (item.name === "Chat") {
+                      navigate("/chat");
                     } else if (item.name === "Contact") {
-                      ("/"); //no contact page now
+                      navigate("/contact");
                     }
                   }}
                   className={classNames(

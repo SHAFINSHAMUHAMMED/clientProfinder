@@ -154,7 +154,6 @@ function RegisterPro() {
   };
 
   const handleLocation = async (event) => {
-    console.log(event);
     const query = event.target.value;
     setlocationQuery(query);
 
@@ -186,7 +185,6 @@ function RegisterPro() {
       let loc = []
           loc[0] = longitude
           loc[1] = latitude
-          console.log(loc)
       setLocId(loc)
     }
   };

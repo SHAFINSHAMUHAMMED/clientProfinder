@@ -70,7 +70,9 @@ useEffect(() => {
 
   useEffect(() => {
     // Create a socket connection when the component mounts
-    const newSocket = io("https://profinder.site/chat");
+    const newSocket = io("http://localhost:4000/chat");
+    // const newSocket = io("https://profinder.site/chat");
+
     setSocket(newSocket);
 
     // Set up event listeners for socket events
@@ -103,7 +105,6 @@ useEffect(() => {
         if (Id === receivedChatId) {
           console.log(`Chat ${receivedChatId} marked as read`);
           setIsRead(true)
-          // You can update your UI to indicate that the message has been read
         }
       });
     }
@@ -163,8 +164,8 @@ useEffect(() => {
           {/* <h1 className="text-xl m-[3%]">Chats</h1> */}
       <div className="flex h-screen full antialiased justify-center items-center text-gray-800">
         {receiverId ? (''):(
-        <div className="w-5/12 h-[92%] flex justify-center items-center rounded-lg bg-gray-300 ml-2 ">
-          <div className="h-[90%]  overflow-scroll w-[96%]  bg-gray-200">
+        <div className="w-5/12 h-[92%] flex justify-center items-center rounded-lg bg-gray-300 sm:ml-2 ">
+          <div className="h-[90%]  overflow-scroll w-[96%] rounded-md  bg-gray-200">
 			<p className="m-2 font-bold">Chats</p>
             {chatList ? (
               chatList.map((list) => {
@@ -173,15 +174,15 @@ useEffect(() => {
                   key={list._id}
                   onClick={() => chatHandle(list._id)}
 
-                    className="m-1 bg-white h-[20%]  flex items-center"
+                    className="mb-1 ms-1 bg-white h-12 sm:h-[20%]  flex items-center"
                   >
                     <img
-                      src={userType=="user"? list.professional.image:userType=="pro"?list.user.image:'null'}
-                      className="h-8 rounded-full  md:block w-8 ml-[1%]"
+                      src={userType=="user"? list.professional.image?list.professional.image:'/icons/man.png':userType=="pro"?list.user.image?list.user.image:'/icons/man.png':''}
+                      className="w-6 h-6 sm:h-8 sm:w-8 rounded-full  md:block "
                       alt=""
                     />
                     <div className="overflow-hidden ml-3 h-[60%]  w-full">
-                      <h1 className="font-bold">{userType=="user"? list.professional.name:userType=="pro"?list.user.name:'null'}</h1>
+                      <h1 className=" text-xs sm:text-base font-medium sm:font-bold">{userType=="user"? list.professional.name:userType=="pro"?list.user.name:'null'}</h1>
                       {/* {messages.length > 0 
                     ? messages.map((message) => ( */}
                     <div className="flex gap-2 items-center">
@@ -209,14 +210,13 @@ useEffect(() => {
                       </small>
                     </div>
                     </div>
-                    <div className="md:mr-[2%] text-end w-full flex-col h-full">
+                    <div className="md:mr-[2%] text-end w-full  flex-col h-full">
                       <p className="text-xs text-gray-400">
                         {list.messages &&
                         list.messages[list.messages.length-1] &&
                         list.messages[list.messages.length-1].timestamp
-                          ? new Date(
-                              list.messages[list.messages.length-1].timestamp
-                            ).toLocaleString()
+                          ? new Date(list.messages[list.messages.length - 1].timestamp).toLocaleDateString()
+
                           : ""}
                       </p>{" "}
                       {/* <div className="border mt-[50%]  rounded-full w-[40%] text-center text-xs font-bold bg-green-600 text-white h-[26%]">
@@ -238,9 +238,9 @@ useEffect(() => {
         </div>
         )}
         {/* </div> */}
-        <div className="sm:flex sm:flex-row h-full w-11/12 overflow-x-hidden">
-          <div className="flex flex-col flex-auto h-full p-6 ">
-            <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-200 h-full p-4">
+        <div className=" sm:flex sm:flex-row h-full w-11/12 overflow-x-hidden">
+          <div className="flex flex-col flex-auto h-full pt-6 ps-3 sm:p-6 ">
+            <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-200 h-full me-1 sm:p-4">
               <div
                 className="flex flex-col h-full overflow-x-auto mb-4"
                 ref={messageHolder}
@@ -256,18 +256,18 @@ useEffect(() => {
                           {message?.senderId == senderId ? (
                             <div className="col-start-7 col-end-13 p-3 rounded-lg">
                               <div className="flex items-center justify-start flex-row-reverse">
-                                <div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
+                                <div className="flex items-center justify-center sm:h-10 sm:w-10 rounded-full bg-indigo-500 flex-shrink-0">
                                   <img
-                                    src={message.senderType=='user'?userData.image:message.senderType=='pro'?proData.image:''}
+                                    src={message.senderType=='user'?userData.image?userData.image:'/icons/man.png':message.senderType=='pro'?proData.image?proData.image:'/icons/man.png':'/icons/man.png'}
                                     alt="Avatar"
-                                    className="h-full w-full rounded-full"
+                                    className="w-6 h-6 sm:h-full sm:w-full rounded-full"
                                   />
                                 </div>
-                                <div className="relative mr-3 w-full text-sm bg-slate-100 py-2 px-4 shadow rounded-xl">
+                                <div className="relative mr-2 sm:mr-3  sm:w-full text-xs sm:text-sm bg-slate-100 py-2 px-6 sm:px-4 shadow rounded-xl">
                                   <div className="break-words">
                                     {message ? message.text : ""}
                                   </div>
-                                  <small className="text-xs text-gray-400">
+                                  <small className="text-[80%] text-gray-400">
                                     {" "}
                                     {new Date(
                                       message?.timestamp
@@ -283,20 +283,19 @@ useEffect(() => {
                           ) : (
                             <div className="col-start-1 col-end-7 p-3 rounded-lg">
                               <div className="flex flex-row items-center">
-                                <div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
+                                <div className="flex items-center justify-center sm:h-10 sm:w-10 rounded-full bg-indigo-500 flex-shrink-0">
                                   <img
-                                     src={message.senderType=='user'?userData.image:message.senderType=='pro'?proData.image:''}
+                                     src={message.senderType=='user'?userData.image?userData.image:'/icons/man.png':message.senderType=='pro'?proData.image?proData.image:'/icons/man.png':'/icons/man.png'}
 
                                     alt="Avatar"
-                                    className="h-full w-full rounded-full"
+                                    className="h-6 w-6 sm:h-full sm:w-full rounded-full"
                                   />
                                 </div>
                                 <div className="relative mr-3 w-full text-sm bg-indigo-100 py-2 px-4 shadow rounded-xl">
                                   <div className="break-words">
                                     {message?.text}
                                   </div>
-                                  <small className="text-xs text-gray-400">
-                                    {" "}
+                                  <small className="text-[80%] text-gray-400">
                                     {new Date(
                                       message?.timestamp
                                     ).toLocaleString("en-US", {
@@ -318,14 +317,14 @@ useEffect(() => {
               </div>
               {Typing||receiverId ? (
               <div>
-                <div className="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
-                  <div className="flex-grow ml-4">
+                <div className="flex flex-row items-center ms-1 mb-2 sm:h-16 rounded-xl bg-white w-full sm:px-4">
+                  <div className="flex-grow sm:ml-4">
                     <div className="relative w-full">
                       <input
                         onChange={(e) => setMessage(e.target.value)}
                         value={message}
                         type="text"
-                        className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
+                        className="flex w-full  rounded-xl ms-2 focus:outline-none focus:border-indigo-300 sm:pl-4 h-10"
                         placeholder="Type your message..."
                       />
                     </div>
@@ -334,7 +333,7 @@ useEffect(() => {
                     <button
                       onClick={sendMessage}
                       type="button"
-                      className="flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 flex-shrink-0"
+                      className="flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-2 sm:px-4 py-1 flex-shrink-0"
                     >
                       <span>Send</span>
                     </button>

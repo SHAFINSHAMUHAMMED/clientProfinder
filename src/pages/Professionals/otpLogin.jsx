@@ -26,7 +26,6 @@ function otpLogin() {
 
   function onCaptchVerify() {
     if (!recaptchaVerifierRef.current) {
-      console.log(111111111);
       recaptchaVerifierRef.current = new RecaptchaVerifier("recaptcha-container", {
         size: "invisible",
         callback: async (response) => {
@@ -41,7 +40,6 @@ function otpLogin() {
       }, auth);
     }
   }
-console.log(recaptchaVerifierRef,'recaptc ha');
   const checkPhone = async (phone) => {
     const res = await professionalsAxios.post("/proPhone", { phone });
     return res.data;

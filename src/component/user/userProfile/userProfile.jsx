@@ -122,9 +122,9 @@ function userProfile() {
             <div className="bg-white relative shadow p-2 rounded-lg text-gray-800 hover:shadow-lg">
               <div className="h-24 sm:h-48 bg-gradient-to-r from-blue-200 via-blue-400 to-blue-600 object-cover"></div>
               <div className="flex justify-center">
-                {userData && userData.image ? (
+                {userData && userData?.image ? (
                   <img
-                    src={userData.image}
+                    src={userData?.image?userData?.image:'/icons/man.png'}
                     className="rounded-full -mt-10 sm:-mt-20 border-4 object-center object-cover border-white mr-2 h-20 w-20 sm:h-36 sm:w-36"
                     alt="User Profile"
                   />
@@ -158,9 +158,9 @@ function userProfile() {
                         >
                           Edit Profile
                         </button>
-                        <button className="block w-full py-2 text-blue-600 hover:underline">
+                        {/* <button className="block w-full py-2 text-blue-600 hover:underline">
                           Change Password
-                        </button>
+                        </button> */}
                       </div>
                     </div>
                   </div>
@@ -178,7 +178,7 @@ function userProfile() {
 
               <div className="py- px-">
                 <div className="font-bold text-base sm:text-3xl font-title text-center mb-2">
-                  {userData ? userData.name : "Name"}
+                  {userData ? userData?.name : "Name"}
                 </div>
                 <div className="flex justify-center gap-5">
                   <div className="">

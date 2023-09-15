@@ -15,24 +15,41 @@ function withdrawReq() {
     adminAxios
       .get("/getRequests")
       .then((res) => {
-        if (res.data.status) {
-          console.log(res.data.data);
-          setRequests(res.data.data);
+        if (res?.data?.status) {
+          setRequests(res.data?.data);
         }
       })
       .catch((error) => {
         console.log(error);
+        if(error?.response?.status==404){
+          navigate("/admin/*")
+        }else if(error?.response?.status==500){
+          navigate("/admin/serverError")
+        }else{
+          navigate("/admin/serverError")
+        }
       });
   }, [Update]);
-  console.log(Requests);
-  const handlePay = async (id,role,amt)=>{
-    const updat = await adminAxios.patch("/upateTransReq",{id,role,amt});
-    console.log(updat);
-    const data= updat.data.status
-    if(data){
-        setUpdate(true)
+  const handlePay = async (id, role, amt) => {
+    try {
+      const updat = await adminAxios.patch("/upateTransReq", { id, role, amt });
+      const data = updat.data.status;
+      
+      if (data) {
+        setUpdate(true);
+      }
+    } catch (error) {
+      console.error(error);
+      if (error?.response?.status == 404) {
+        navigate("/admin/*");
+      } else if (error?.response?.status == 500) {
+        navigate("/admin/serverError");
+      } else {
+        navigate("/admin/serverError");
+      }
     }
   }
+  
   const indexOfLastPro = currentPage * prosPerPage;
   const indexOfFirstPro = indexOfLastPro - prosPerPage;
   const currentPros = Requests.slice(indexOfFirstPro, indexOfLastPro);
@@ -42,6 +59,7 @@ function withdrawReq() {
         <div className="overflow-x-auto sm:mx-0.5 lg:mx-0.5 p-10">
           <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
             <div className="overflow-hidden">
+            {Requests?.length > 0 ?
               <table className="min-w-full text-center">
                 <thead className="bg-gray-200 border-b">
                   <tr>
@@ -83,35 +101,35 @@ function withdrawReq() {
                     </th>
                   </tr>
                 </thead>
-                {Requests.length > 0
-                  ? Requests.map((trans) => {
+                {Requests?.length > 0
+                  ? Requests?.map((trans) => {
                       return (
                         <tbody key={trans._id}>
                           <tr className="bg-white border-b transition duration-300 ease-in-out hover:bg-gray-100">
                             <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                              {trans.proId._id}
+                              {trans?.proId._id}
                             </td>
                             <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                              {trans.To
-                                ? trans.To == "pro"
+                              {trans?.To
+                                ? trans?.To == "pro"
                                   ? "professional"
                                   : "User"
                                 : ""}
                             </td>
                             <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                               {trans.To
-                                ? trans.To == "pro"
-                                  ? trans.proId.name
-                                  : trans.userID.name
+                                ? trans?.To == "pro"
+                                  ? trans?.proId?.name
+                                  : trans?.userID?.name
                                 : ""}
                             </td>
                             <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                              {trans.accDetails.accNo
-                                ? trans.accDetails.accNo
+                              {trans?.accDetails?.accNo
+                                ? trans?.accDetails?.accNo
                                 : ""}
                             </td>
                             <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                              {trans.accDetails.amt ? trans.accDetails.amt : ""}
+                              {trans?.accDetails?.amt ? trans?.accDetails?.amt : ""}
                             </td>
 
                             <td className="text-sm text-gray-900 flex justify-center font-light px-10 py-4 whitespace-nowrap">
@@ -128,9 +146,10 @@ function withdrawReq() {
                     })
                   : ""}
               </table>
+              :<div className="text-center text-2xl font-semibold"><h2>No Requests</h2></div>}
               <Pagination
               currentPage={currentPage}
-              totalPages={Math.ceil(Requests.length / prosPerPage)}
+              totalPages={Math.ceil(Requests?.length / prosPerPage)}
               onPageChange={setCurrentPage}
               page="adminList"
             />

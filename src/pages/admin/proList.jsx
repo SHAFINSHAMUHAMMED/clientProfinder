@@ -39,6 +39,14 @@ function proList() {
       if(res.data.status){
       setPros(res.data.pros);
       }
+    }).catch((error)=>{
+      if (error?.response?.status == 404) {
+        navigate("/admin/*");
+      } else if (error?.response?.status == 500) {
+        navigate("/admin/serverError");
+      } else {
+        navigate("/admin/serverError");
+      }
     })
   };
   }, [count]);

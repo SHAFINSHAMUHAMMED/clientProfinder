@@ -17,7 +17,7 @@ import { decodeJwt } from "jose";
 function listPros() {
   const [pros, setPros] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [prosPerPage] = useState(3);
+  const [prosPerPage] = useState(5);
   const [searchQuery, setSearchQuery] = useState("");
   const [category, setcategory] = useState([]);
   const [Data, setData] = useState("");
@@ -66,7 +66,7 @@ function listPros() {
   }, []);
   const indexOfLastPro = currentPage * prosPerPage;
   const indexOfFirstPro = indexOfLastPro - prosPerPage;
-  let currentPros
+  let currentPros;
 
   const handleOpenLocationPopup = () => {
     setLocationPopupVisible(true);
@@ -75,9 +75,11 @@ function listPros() {
   const handleSearchChange = (event) => {
     const query = event.target.value;
     setSearchQuery(query);
-    const filtered = category.filter((category) =>
-      category.name.toLowerCase().includes(query.toLowerCase())
-    );
+    const filtered = category
+      ? category.filter((category) =>
+          category.name.toLowerCase().includes(query.toLowerCase())
+        )
+      : [];
     setFilteredCategories(filtered);
   };
   const handleCategorySelection = (categoryName) => {
@@ -115,25 +117,29 @@ function listPros() {
   const radiusThreshold = 50;
   // filter
   if (categoryQuery) {
-    currentPros = pros.filter((user) => {
-      const hasCat = user.category.name === categoryQuery;
-      const distance = calculateDistance(
-        user.location.location.LocId,
-        locationCoordinates
-      );
-      const isWithinRadius = distance <= radiusThreshold;
-      return hasCat && isWithinRadius;
-    });
+    currentPros = pros
+      ? pros.filter((user) => {
+          const hasCat = user.category.name === categoryQuery;
+          const distance = calculateDistance(
+            user.location.location.LocId,
+            locationCoordinates
+          );
+          const isWithinRadius = distance <= radiusThreshold;
+          return hasCat && isWithinRadius;
+        })
+      : [];
     currentPros = currentPros.slice(indexOfFirstPro, indexOfLastPro);
   } else {
-    currentPros = pros.filter((user) => {
-      const distance = calculateDistance(
-        user.location.location.LocId,
-        locationCoordinates
-      );
-      const isWithinRadius = distance <= radiusThreshold;
-      return isWithinRadius;
-    });
+    currentPros = pros
+      ? pros.filter((user) => {
+          const distance = calculateDistance(
+            user.location.location.LocId,
+            locationCoordinates
+          );
+          const isWithinRadius = distance <= radiusThreshold;
+          return isWithinRadius;
+        })
+      : [];
     currentPros = currentPros.slice(indexOfFirstPro, indexOfLastPro);
   }
 
@@ -146,15 +152,17 @@ function listPros() {
       console.log("Error please fill correct ");
       return;
     } else {
-      const filtered = pros.filter((user) => {
-        const hasCat = user.category.name === searchQuery;
-        const distance = calculateDistance(
-          user.location.location.LocId,
-          locationCoordinates
-        );
-        const isWithinRadius = distance <= radiusThreshold;
-        return hasCat && isWithinRadius;
-      });
+      const filtered = pros
+        ? pros.filter((user) => {
+            const hasCat = user.category.name === searchQuery;
+            const distance = calculateDistance(
+              user.location.location.LocId,
+              locationCoordinates
+            );
+            const isWithinRadius = distance <= radiusThreshold;
+            return hasCat && isWithinRadius;
+          })
+        : [];
       setFilteredPros(filtered);
     }
   };
@@ -211,31 +219,30 @@ function listPros() {
             </div>
           </form>
           {filteredCategories.length > 0 ? (
-              <ul className="border border-gray-300 rounded-md overflow-y-auto m-auto max-h-28 w-1/2">
-                {filteredCategories.map((cat) => (
-                  <li
-                    key={cat._id}
-                    className="px-4 py-2 cursor-pointer hover:bg-gray-100"
-                    value=""
-                    onClick={() => {
-                      handleCategorySelection(cat.name);
-                    }}
-                  >
-                    {cat.name}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              ""
-            )}
+            <ul className="border border-gray-300 rounded-md overflow-y-auto m-auto max-h-28 w-1/2">
+              {filteredCategories.map((cat) => (
+                <li
+                  key={cat._id}
+                  className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                  value=""
+                  onClick={() => {
+                    handleCategorySelection(cat.name);
+                  }}
+                >
+                  {cat.name}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            ""
+          )}
         </div>
         <div className="2 flex justify-center mt-10">
-          <div className="content flex-col justify-center p-10 mb-5 bg-gray-100 w-4/6 h-[70vh] overflow-y-scroll">
-          {filteredPros.length > 0 || currentPros.length > 0 ? (
-            filteredPros.length > 0
-              ? filteredPros.map((pro) => {
-                const rating = pro.rating.stars/pro.rating.TotalReviews
-                console.log(rating);
+          <div className="content flex-col justify-center p-10 mb-5 bg-gray-100 w-4/6 h-[100vh] overflow-y-scroll">
+            {filteredPros.length > 0 || currentPros.length > 0 ? (
+              filteredPros.length > 0 ? (
+                filteredPros.map((pro) => {
+                  const rating = pro.rating.stars / pro.rating.TotalReviews;
                   return (
                     <div
                       key={pro._id}
@@ -244,8 +251,8 @@ function listPros() {
                       <div className="profile flex p-5 pt-2 pb-0 justify-between">
                         <div className="flex gap-2 mb-3">
                           <img
-                            className="rounded w-10 h-10 bg-black"
-                            src=""
+                            className="rounded-full w-10 h-10 bg-black"
+                            src={pro.image ? pro.image : "/icons/man.png"}
                             alt=""
                           />
                           <div className="proDetails">
@@ -270,11 +277,17 @@ function listPros() {
                         </div>
                         {/*StarRating component*/}
                         {pro.rating.stars ? (
-                        <div className="flex items-start">
-                          <StarRating rating={pro.rating.stars/pro.rating.TotalReviews} />
-                          <span className="text-xs">({pro.rating.TotalReviews})</span>
-                        </div>
-                        ):(
+                          <div className="flex items-start">
+                            <StarRating
+                              rating={
+                                pro.rating.stars / pro.rating.TotalReviews
+                              }
+                            />
+                            <span className="text-xs">
+                              ({pro.rating.TotalReviews})
+                            </span>
+                          </div>
+                        ) : (
                           <div>No Ratings</div>
                         )}
                       </div>
@@ -285,16 +298,22 @@ function listPros() {
       </div> */}
                       <div className="main flex items-center justify-center">
                         <div className="tags flex text-center gap-2 w-5/6">
-                          <div className="bg-blue-300 flex items-center justify-center rounded-xl w-24 h-6">
-                            <h6 className="text-xs ">Tags</h6>
-                          </div>
-                          <div className="bg-blue-300 flex items-center justify-center rounded-xl w-24 h-6">
-                            <h6 className="text-xs">Tags</h6>
-                          </div>
-                          <div className="bg-blue-300 flex items-center justify-center rounded-xl w-24 h-6">
-                            <h6 className="text-xs">Tags</h6>
-                          </div>
+                          {pro.skills?.length > 0 ? (
+                            pro.skills.slice(0, 5).map((skill) => (
+                              <div
+                                key={skill._id}
+                                className="bg-blue-300 flex items-center justify-center rounded-xl w-24 h-6"
+                              >
+                                <h6 className="text-xs ">{skill.skill}</h6>
+                              </div>
+                            ))
+                          ) : (
+                            <div className="bg-blue-300 flex items-center justify-center rounded-xl w-24 h-6">
+                              <h6 className="text-xs">No Skills Added</h6>
+                            </div>
+                          )}
                         </div>
+
                         <Link
                           to={"/connect"}
                           state={{ proData: pro }}
@@ -306,7 +325,8 @@ function listPros() {
                     </div>
                   );
                 })
-              : currentPros.map((pro) => {
+              ) : (
+                currentPros.map((pro) => {
                   return (
                     <div
                       key={pro._id}
@@ -315,8 +335,8 @@ function listPros() {
                       <div className="profile flex p-5 pt-2 pb-0 justify-between">
                         <div className="flex gap-2 mb-3">
                           <img
-                            className="rounded w-10 h-10 bg-black"
-                            src=""
+                            className="rounded-full w-10 h-10 bg-black"
+                            src={pro.image ? pro.image : "/icons/man.png"}
                             alt=""
                           />
                           <div className="proDetails">
@@ -341,11 +361,17 @@ function listPros() {
                         </div>
                         {/*StarRating component*/}
                         {pro.rating.stars ? (
-                        <div className="flex items-start">
-                          <StarRating rating={pro.rating.stars/pro.rating.TotalReviews} />
-                          <span className="text-xs">({pro.rating.TotalReviews})</span>
-                        </div>
-                        ):(
+                          <div className="flex items-start">
+                            <StarRating
+                              rating={
+                                pro.rating.stars / pro.rating.TotalReviews
+                              }
+                            />
+                            <span className="text-xs">
+                              ({pro.rating.TotalReviews})
+                            </span>
+                          </div>
+                        ) : (
                           <div>No Ratings</div>
                         )}
                       </div>
@@ -356,16 +382,22 @@ function listPros() {
                 </div> */}
                       <div className="main flex items-center justify-center">
                         <div className="tags flex text-center gap-2 w-5/6">
-                          <div className="bg-blue-300 flex items-center justify-center rounded-xl w-24 h-6">
-                            <h6 className="text-xs ">Tags</h6>
-                          </div>
-                          <div className="bg-blue-300 flex items-center justify-center rounded-xl w-24 h-6">
-                            <h6 className="text-xs">Tags</h6>
-                          </div>
-                          <div className="bg-blue-300 flex items-center justify-center rounded-xl w-24 h-6">
-                            <h6 className="text-xs">Tags</h6>
-                          </div>
+                          {pro.skills?.length > 0 ? (
+                            pro.skills.slice(0, 5).map((skill) => (
+                              <div
+                                key={skill._id}
+                                className="bg-blue-300 flex items-center justify-center rounded-xl w-24 h-6"
+                              >
+                                <h6 className="text-xs ">{skill.skill}</h6>
+                              </div>
+                            ))
+                          ) : (
+                            <div className="bg-blue-300 flex items-center justify-center rounded-xl w-24 h-6">
+                              <h6 className="text-xs">No Skills Added</h6>
+                            </div>
+                          )}
                         </div>
+
                         <Link
                           to={"/connect"}
                           state={{ proData: pro }}
@@ -377,11 +409,12 @@ function listPros() {
                     </div>
                   );
                 })
-  ):(
-    <p className="text-center text-gray-500">No Profession Available</p>
-  )
-                }
-                
+              )
+            ) : (
+              <p className="text-center text-gray-500">
+                No Profession Available
+              </p>
+            )}
           </div>
         </div>
       </div>

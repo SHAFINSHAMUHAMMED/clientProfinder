@@ -21,7 +21,7 @@ function login() {
   const successMessage = location.state?.successMessage || "";
   const setTokenCookie = (token) => {
     const expiryDate = new Date();
-    const expirationMinutes = 60; //expiration time in minutes
+    const expirationMinutes = 48; //expiration time in minutes
     expiryDate.setTime(expiryDate.getTime() + expirationMinutes * 60 * 1000);
     Cookies.set("token", token, { expires: expiryDate });
   };
@@ -56,7 +56,6 @@ function login() {
         const token = result.token;
         const user = result.name;
         const id = result.id;
-        console.log(id);
         setTokenCookie(token);
         dispatch(userLogin({ token: token }));
         dispatch(userName({ username: user }));
@@ -163,7 +162,6 @@ function login() {
 
             <GoogleLogin
               onSuccess={(credentialResponse) => {
-                console.log(credentialResponse);
                 const { credential } = credentialResponse;
                 const payload = credential ? decodeJwt(credential) : undefined;
                 if (payload) {

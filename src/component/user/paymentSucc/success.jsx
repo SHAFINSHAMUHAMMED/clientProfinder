@@ -8,7 +8,6 @@ function Success({ orderData }) {
   };
   const orderDate = new Date(orderData.date);
   const day = String(orderDate.getDate()).padStart(2, "0");
-  console.log(day);
   const month = String(orderDate.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
   const year = String(orderDate.getFullYear()).slice(-2);
   const formattedDate = `${day}/${month}/${year}`;

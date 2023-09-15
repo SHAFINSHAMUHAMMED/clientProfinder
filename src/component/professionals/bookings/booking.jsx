@@ -77,7 +77,6 @@ function booking() {
     );
   }
  
-  console.log(filteredBookings);
   return (
     <div>
       <div className="  lg:p-24 ">

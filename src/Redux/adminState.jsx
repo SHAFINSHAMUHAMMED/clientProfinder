@@ -16,7 +16,8 @@ export const adminState = createSlice({
         adminLogout(state,action) {
             state.Token = ""
             state.adminName= ""
-        }
+        },
+        
     },
 
 })

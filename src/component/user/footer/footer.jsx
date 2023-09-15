@@ -38,22 +38,17 @@ const Footer = () => {
               Legal
             </a>
           </div>
-          <div className="px-5 py-2">
+          {/* <div className="px-5 py-2">
             <a
               href="#"
               className="text-base leading-6 text-gray-500 hover:text-gray-900"
             >
               Terms
             </a>
-          </div>
-        </nav>
-        <div className="flex justify-center mt-0">
-          <form action="">
-            {/* <div className="">
-            <p className=" text-slate-400 font-extralight">
-              <h4>Subscribe our newsletter</h4>
-            </p>
           </div> */}
+        </nav>
+        {/* <div className="flex justify-center mt-0">
+          <form action="">
             <div className="flex items-center ">
               <div className=" ">
                 <input
@@ -75,7 +70,7 @@ const Footer = () => {
               </div>
             </div>
           </form>
-        </div>
+        </div> */}
         <div className="flex justify-center mt-8 space-x-6">
           <a href="#" className="text-gray-400 hover:text-gray-500">
             <span className="sr-only">Facebook</span>

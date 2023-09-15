@@ -63,7 +63,6 @@ function otpLogin() {
       return;
     }
     const findUser = await checkPhone(ph);
-    console.log(findUser.status);
     if (findUser.status) {
       try {
         isSigningInRef.current = true;
@@ -109,7 +108,6 @@ function otpLogin() {
         const message = err.code || "Invalid OTP";
         toast.error(message);
         setLoading(false);
-        console.log(message);
       });
   }
 

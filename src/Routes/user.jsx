@@ -12,11 +12,15 @@ import ConfirmBooking from "../pages/User/bookingConfirm";
 import UserProfile from "../pages/User/userProfile";
 import Chat from "../pages/User/chat"
 import Wallet from "../pages/User/wallet"
+import Contact from "../pages/User/contactUs";
+import Error from "../component/errorpage/error404"
+import Error500 from "../component/errorpage/error500"
+
 function UserRoutes() {
   const IsAuth = useSelector((state) => state.user);
   const navigate = useNavigate();
   useEffect(() => {
-    if (!IsAuth.Token && !window.location.pathname.includes("/register") && !window.location.pathname.includes("/login")) {
+    if (!IsAuth.Token && !window.location.pathname.includes("/register") && !window.location.pathname.includes("/login")&& !window.location.pathname.includes("/contact")) {
       navigate("/");
     }
   }, [IsAuth.Token, navigate]);
@@ -38,7 +42,9 @@ function UserRoutes() {
         <Route path="/profile" element={IsAuth.Token?<UserProfile />:<UserHome/>} />
         <Route path="/chat" element={IsAuth.Token?<Chat userRole="user"/>:<UserHome/>} />
         <Route path="/wallet" element={IsAuth.Token?<Wallet userRole="user" />:<UserHome/>} />
-
+        <Route path="/contact" element={<Contact/>}/>
+        <Route path="/serverError" element={<Error500 role={'user'}/>}/>
+        <Route path="/*" element={<Error role={'user'}/>}/>
       </Routes>
     </div>
   );

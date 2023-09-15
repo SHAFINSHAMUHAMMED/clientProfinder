@@ -106,8 +106,6 @@ function confirmBooking() {
       name: "proFinder",
       description: "abcdefghijkl",
       handler: function (response) {
-        console.log(response, "line 88");
-
         if (response.razorpay_payment_id && response.razorpay_signature) {
           userAxios
             .post("/verifyRazorpay", { response: response, requestData })
@@ -121,6 +119,13 @@ function confirmBooking() {
             })
             .catch((error) => {
               console.error("Error verifying transaction:", error);
+              if(error?.response?.status==404){
+                navigate("/*")
+              }else if(error?.response?.status==500){
+                navigate("/serverError")
+              }else{
+                navigate("/serverError")
+              }
             });
         } else if (response.error.code === Razorpay.Error.PAYMENT_CANCELLED) {
           // cancelled by the user
@@ -151,56 +156,56 @@ function confirmBooking() {
     } = formData;
 
     // Validation
-    // if (!firstName || firstName.trim().length < 4) {
-    //   setErrMsg({id:1, message:"Enter a valid First Name."});
-    //   return;
-    // }
+    if (!firstName || firstName?.trim()?.length < 4) {
+      setErrMsg({id:1, message:"Enter a valid First Name."});
+      return;
+    }
 
-    // if (!lastName || lastName.trim().length < 1) {
-    //   setErrMsg({id:2,message:"Enter a valid Last Name."});
-    //   return;
-    // }
+    if (!lastName || lastName?.trim()?.length < 1) {
+      setErrMsg({id:2,message:"Enter a valid Last Name."});
+      return;
+    }
 
-    // if (!address || address.trim().length < 5) {
-    //   setErrMsg({id:3,message:"Enter a valid Address"});
-    //   return;
-    // }
+    if (!address || address?.trim()?.length < 5) {
+      setErrMsg({id:3,message:"Enter a valid Address"});
+      return;
+    }
 
-    // if (!email || email.trim().length < 5) {
-    //   setErrMsg({id:4,message:"Email is required."});
-    //   return;
-    // }
+    if (!email || email?.trim()?.length < 5) {
+      setErrMsg({id:4,message:"Email is required."});
+      return;
+    }
 
-    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    // if (!emailRegex.test(email.trim())) {
-    //   setErrMsg({id:4,message:"Invalid email format."});
-    //   return;
-    // }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email?.trim())) {
+      setErrMsg({id:4,message:"Invalid email format."});
+      return;
+    }
 
-    // if (!phone || !/^\d{10}$/.test(phone.toString().trim())) {
-    //   setErrMsg({id:5,message:"Phone must be a 10-digit number."});
-    //   return;
-    // }
+    if (!phone || !/^\d{10}$/.test(phone?.toString()?.trim())) {
+      setErrMsg({id:5,message:"Phone must be a 10-digit number."});
+      return;
+    }
 
-    // if (!city || city.trim().length < 2) {
-    //   setErrMsg({id:6,message:"Enter a valid City name."});
-    //   return;
-    // }
+    if (!city || city?.trim()?.length < 2) {
+      setErrMsg({id:6,message:"Enter a valid City name."});
+      return;
+    }
 
-    // if (!district || district.trim().length < 2) {
-    //   setErrMsg({id:7,message:"Enter a valid District name."});
-    //   return;
-    // }
+    if (!district || district?.trim()?.length < 2) {
+      setErrMsg({id:7,message:"Enter a valid District name."});
+      return;
+    }
 
-    // if (!landmark || landmark.trim().length < 2) {
-    //   setErrMsg({id:8,message:"Enter a valid Landmark"});
-    //   return;
-    // }
+    if (!landmark || landmark?.trim()?.length < 2) {
+      setErrMsg({id:8,message:"Enter a valid Landmark"});
+      return;
+    }
 
-    // if (!zip || !/^\d{6}$/.test(zip.toString().trim())) {
-    //   setErrMsg({id:9,message:"Enter a valid 6-digit Zip Code."});
-    //   return;
-    // }
+    if (!zip || !/^\d{6}$/.test(zip?.toString()?.trim())) {
+      setErrMsg({id:9,message:"Enter a valid 6-digit Zip Code."});
+      return;
+    }
     if (selectedPayment == null) {
       setErrMsg({ id: 10, message: "Choose a payment Option" });
       return;
@@ -213,10 +218,20 @@ function confirmBooking() {
       return;
     } else {
       // setshowitem(1)
+      try{
       const response = await userAxios.post("/razorpay", { selectedPayment });
       if (response.data.status) {
         handleOpenRazorpay(response.data.data);
       }
+    }catch(error){
+      if(error?.response?.status==404){
+        navigate("/*")
+      }else if(error?.response?.status==500){
+        navigate("/serverError")
+      }else{
+        navigate("/serverError")
+      }
+    }
   }
   };
   return (

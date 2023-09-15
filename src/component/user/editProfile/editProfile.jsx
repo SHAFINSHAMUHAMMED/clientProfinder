@@ -2,12 +2,20 @@ import React, { useState, useEffect } from "react";
 import userAxiosInstance from "../../../Axios/userAxios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { userName } from "../../../Redux/userState";
 import { userImage } from "../../../Redux/userState";
 import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 import { CgSpinner } from "react-icons/cg";
 
-function EditProfile({ role, closePopup, userData, updateUserData, update, count }) {
+function EditProfile({
+  role,
+  closePopup,
+  userData,
+  updateUserData,
+  update,
+  count,
+}) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const userAxios = userAxiosInstance();
@@ -75,11 +83,11 @@ function EditProfile({ role, closePopup, userData, updateUserData, update, count
       setLoading(false);
       return;
     }
-    if (!formdata.name || formdata.name.trim().length < 3) {
+    if (!formdata.name || formdata?.name?.trim()?.length < 3) {
       setErrMsg("Enter Valid Name.");
       return;
     }
-    if (!formdata.phone || !/^\d{10}$/.test(formdata.phone.toString().trim())) {
+    if (!formdata.phone || !/^\d{10}$/.test(formdata?.phone?.toString()?.trim())) {
       setErrMsg("Phone must be a 10-digit number.");
       return;
     }
@@ -101,6 +109,7 @@ function EditProfile({ role, closePopup, userData, updateUserData, update, count
           });
           update(count + 1);
           dispatch(userImage({ image: res.data.image }));
+          dispatch(userName({ username: formdata.name }));
           Toast.fire({
             icon: "success",
             title: "Profile updated",
@@ -115,6 +124,14 @@ function EditProfile({ role, closePopup, userData, updateUserData, update, count
           }).then(() => {
             navigate("/profile");
           });
+        }
+      }).catch((error)=>{
+        if(error?.response?.status==404){
+          navigate("/*")
+        }else if(error?.response?.status==500){
+          navigate("/serverError")
+        }else{
+          navigate("/serverError")
         }
       });
   };
@@ -147,7 +164,7 @@ function EditProfile({ role, closePopup, userData, updateUserData, update, count
           >
             <img
               src={
-                formdata.file instanceof File
+                formdata?.file instanceof File
                   ? URL.createObjectURL(formdata.file)
                   : userData.image
                   ? userData.image

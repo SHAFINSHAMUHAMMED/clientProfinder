@@ -18,15 +18,14 @@ function EditProfile({
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const proAxios = proAxiosInstance();
-  const [errMsg, setErrMsg] = useState("");
   const token = useSelector((state) => state.professional.Token);
   const proId = useSelector((store) => store.professional.proId);
+  const [errMsg, setErrMsg] = useState("");
   const [Cat, setCat] = useState("");
   const [loading, setLoading] = useState(false);
   const [skills, setSkills] = useState([]);
-  const [newSkill, setNewSkill] = useState({ skill: "", _id: null });
+  const [newSkill, setNewSkill] = useState({skill: "", _id: null});
   const [description, setDescription] = useState("");
-
   const [formdata, setFormdata] = useState({
     phone: userData.phone,
     name: userData.name,
@@ -76,25 +75,32 @@ function EditProfile({
     }));
   };
   const handleAddSkill = () => {
-    if (newSkill.skill.trim() !== "") {
-      const updatedSkills = [...skills, newSkill];
-      setSkills(updatedSkills);
-      setFormdata((prevData) => ({
-        ...prevData,
-        skills: updatedSkills,
-      }));
-      setNewSkill("");
-    }
-  };
-  const handleDeleteSkill = (index) => {
-    const updatedSkills = [...skills];
-    updatedSkills.splice(index, 1);
+    if(formdata.skills.length<5){
+  if (newSkill && newSkill.skill.trim() !== "" && newSkill.skill.trim().length<=15 && newSkill.skill.trim().length>3) {
+    const updatedSkills = [...skills, newSkill];
     setSkills(updatedSkills);
     setFormdata((prevData) => ({
       ...prevData,
-      skills: updatedSkills,
+      skills: [...prevData.skills, newSkill],
     }));
-  };
+    setNewSkill({skill:"", _id:null });
+    setErrMsg("");
+  } else {
+    setErrMsg('Enter Valid Skill');
+  }
+}else{
+  setErrMsg('Please Delete to add New')
+}
+};
+const handleDeleteSkill = (index) => {
+  const updatedSkills = [...formdata.skills];
+  updatedSkills.splice(index, 1);
+  setFormdata((prevData) => ({
+    ...prevData,
+    skills: updatedSkills,
+  }));
+  setSkills(updatedSkills);
+};
 
   const fetchData = async () => {
     try {
@@ -144,7 +150,7 @@ function EditProfile({
     fullTime: formdata.fullTime,
     description: formdata.description,
   };
-  console.log(requestData);
+
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -152,7 +158,8 @@ function EditProfile({
       formdata.name === userData.name &&
       formdata.phone === userData.phone &&
       formdata.file === userData.image &&
-      formdata.description === userData.description
+      formdata.description === userData.description &&
+      formdata.skills[formdata.skills.length-1].skill === userData.skills[userData.skills.length-1].skill
     ) {
       // No changes made, display an error message
       setErrMsg("No changes were made.");
@@ -167,8 +174,9 @@ function EditProfile({
       setErrMsg("Phone must be a 10-digit number.");
       return;
     }
-    if (!formdata.fullTime || formdata.partTime) {
+    if (!formdata.fullTime || !formdata.partTime) {
       setErrMsg("Enter All Charges");
+      return;
     }
     proAxios
       .post("/proEdit", requestData, {
@@ -225,16 +233,16 @@ function EditProfile({
   });
 
   return (
-    <div className="absolute left-1/2 m-auto min-h-screen w-fit flex justify-center items-start">
+    <div className="absolute left-1 sm:left-5 md:left-[35%] sm:w-[50%] lg:w-[35%] top-[30%] md:top-[20%]">
       <form
         action=""
         onSubmit={handleUpdateProfile}
         encType="multipart/form-data"
       >
-        <div className="max-w-lg w-full bg-white p-8 rounded-lg shadow-lg">
+        <div className=" bg-white p-4 lg:p-8 pt-3 rounded-lg shadow-lg">
           <label
             htmlFor="file"
-            className="flex flex-col items-center cursor-pointer mb-4"
+            className="flex flex-col items-center cursor-pointer mb-2"
           >
             <img
               src={
@@ -245,11 +253,11 @@ function EditProfile({
                   : "/icons/man.png"
               }
               alt="...."
-              className="avatar rounded-full w-20 h-20 mb-2"
+              className="avatar rounded-full w-10 h-10 lg:w-20 lg:h-20 mb-2"
             />
-            <span className="text-blue-500">Choose Image</span>
+            <span className=" text-xs sm:text-base text-blue-500">Choose Image</span>
           </label>
-          <div className="mb-4">
+          <div className="mb-2">
             <input
               type="file"
               name="file"
@@ -260,10 +268,10 @@ function EditProfile({
             />
           </div>
           <div className="flex justify-between">
-            <div className="mb-4">
+            <div className="mb-2">
               <label
                 htmlFor="name"
-                className="block text-left font-medium mb-1"
+                className="text-xs xl:text-sm block text-left font-medium mb-1"
               >
                 Your Name
               </label>
@@ -274,13 +282,13 @@ function EditProfile({
                 value={formdata.name}
                 onChange={handleNameChange}
                 placeholder="Your Name"
-                className="w-full p-2 border rounded"
+                className="w-full p-1 text-sm border rounded"
               />
             </div>
-            <div className="mb-4">
+            <div className="mb-2">
               <label
                 htmlFor="phone"
-                className="block text-left font-medium mb-1"
+                className="text-xs xl:text-sm block text-left font-medium mb-1"
               >
                 Your Dial Number
               </label>
@@ -291,12 +299,13 @@ function EditProfile({
                 value={formdata.phone}
                 onChange={handlePhoneChange}
                 placeholder="Your Dial number"
-                className="w-full p-2 border rounded"
+                className="w-full p-1 text-sm border rounded"
+
               />
             </div>
           </div>
-          <div className="flex">
-            {/* <div className="mb-4">
+          <div className="flex justify-between">
+            {/* <div className="mb-2">
               <label
                 htmlFor="location"
                 className="block text-left font-medium mb-1"
@@ -314,10 +323,10 @@ function EditProfile({
               />
             </div> */}
 
-            <div className="mb-4">
+            <div className="mb-2">
               <label
                 htmlFor="skills"
-                className="block text-left font-medium mb-1"
+                className="text-xs xl:text-sm block text-left font-medium mb-1"
               >
                 Your Skills
               </label>
@@ -326,26 +335,26 @@ function EditProfile({
                   type="text"
                   name="skills"
                   id="skills"
-                  // value={newSkill}
+                  value={newSkill.skill}
                   onChange={(e) =>
-                    setNewSkill({ skill: e.target.value, _id: null })
+                    setNewSkill({ skill: e.target.value.toLocaleUpperCase(), _id: null })
                   }
                   placeholder="Your Skills"
-                  className="w-full p-2 border rounded "
+                  className="w-full p-1 text-sm border rounded"
                 />
                 <button
                   type="button"
                   onClick={handleAddSkill}
-                  className="bg-gray-500 px-1 h-8  rounded-md -ml-10"
+                  className="bg-gray-500 px-1 h-6  rounded-md -ml-9"
                 >
                   add
                 </button>
               </div>
             </div>
-            <div className="mb-4">
+            <div className="mb-2">
               <label
                 htmlFor="Partime"
-                className="block text-left font-medium mb-1"
+                className="text-xs xl:text-sm block text-left font-medium mb-1"
               >
                 Your PartTime Charge
               </label>
@@ -355,7 +364,8 @@ function EditProfile({
                 value={formdata.partTime}
                 onChange={handlePartimeChange}
                 placeholder="Your Part Time "
-                className="w-full p-2 border rounded"
+                className="w-full p-1 text-sm border rounded"
+
               />
             </div>
           </div>
@@ -378,10 +388,10 @@ function EditProfile({
               ""
             )} */}
           <div className="flex">
-            <div className="mb-4">
+            <div className="mb-2">
               <label
                 htmlFor="Fullcharge"
-                className="block text-left font-medium mb-1"
+                className="text-xs xl:text-sm block text-left font-medium mb-1"
               >
                 Your FullTime Charge
               </label>
@@ -391,51 +401,68 @@ function EditProfile({
                 value={formdata.fullTime}
                 onChange={handleFulltimeChange}
                 placeholder="Your Full Time"
-                className="w-full p-2 border rounded"
+                className="w-full p-1 text-sm border rounded"
               />
             </div>
           </div>
-          <div className="mb-4">
+          <div className="mb-2">
             <label
               htmlFor="description"
-              className="block text-left font-medium mb-1"
+              className="text-xs xl:text-sm block text-left font-medium mb-1"
             >
               Description
             </label>
             <textarea
               name="description"
               id="description"
-              value={description}
+              value={formdata.description?formdata.description:''}
               onChange={handleDescriptionChange}
               placeholder="Your Description"
-              className="w-full p-2 border rounded"
+              className="w-full p-1 text-sm border rounded"
             />
           </div>
-          {skills.length > 0 && (
-            <div className="mb-4">
-              <label className="block text-left font-medium mb-1">
+          {formdata.skills.length > 0 && (
+            <div className="mb-2">
+              <label className="text-xs xl:text-sm block text-left font-medium mb-1">
                 Added Skills:
               </label>
-              <div className="border border-gray-300 rounded p-2">
-                {skills.map((skill, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between mb-1"
-                  >
-                    <span>{skill.skill}</span>
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteSkill(index)}
-                      className="text-red-500"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                ))}
-              </div>
+              <div className="border text-center sm:flex flex-wrap border-gray-300 rounded p-2">
+
+  {formdata.skills?.length ?
+  formdata.skills.map((skill, index) => (
+    <div key={index} className="flex  justify-start mb-1">
+      <span className="bg-gray-200 text-xs font-medium rounded-xl px-1 sm:px-2 py-1 ">
+        {skill.skill}
+        <button
+          type="button"
+          onClick={() => handleDeleteSkill(index)}
+          className="text-red-500 ml-2 hover:text-red-700"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-4 w-4 inline"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </span>
+    </div>
+  )):'no skills'}
+</div>
+
+
+
             </div>
           )}
-          {errMsg && <div className="text-red-500 mb-4">{errMsg}</div>}
+          {errMsg && <div className="text-red-500 mb-2">{errMsg}</div>}
           <div className="flex justify-end">
             <button
               className="bg-gray-300 hover:bg-gray-500 text-white py-1 px-2 rounded me-2"

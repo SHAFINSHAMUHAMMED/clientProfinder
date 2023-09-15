@@ -1,13 +1,41 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-
+import { useDispatch, useSelector } from "react-redux";
+import { proLogout } from "../../../Redux/professionalsState";
+import Cookies from "js-cookie";
+import { decodeJwt } from "jose";
 import "./sidebar.css";
 
 function sidebar() {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [Show, setShow] = useState(1)
+  const [active, setactive] = useState('')
+  const token = useSelector((store) => store.professional.Token);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const isTokenExpired = () => {
+    const token = Cookies.get("token");
+    if (token) {
+      const decodedToken = decodeJwt(token);
+      const currentTimestamp = Date.now() / 1000;
+      return decodedToken.exp < currentTimestamp;
+    }
+    return true; // If there's no token, it is expired
+  };
+
+  useEffect(() => {
+    const expired = isTokenExpired();
+    if (expired) {
+      dispatch(proLogout());
+      navigate("/professional/login");
+    }
+  }, [navigate, dispatch, token]);
+
+  const logout = () => {
+    dispatch(proLogout());
+    navigate("/professional/login");
+  };
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen);
   };
@@ -23,6 +51,8 @@ function sidebar() {
           <a href="/professional/">
             <img src="/loginpage/logo2.png" alt="" />
           </a>
+          <div className="flex gap-5 md:gap-10">
+          <div onClick={logout} className="block md:hidden">{token?'logout':'login'}</div>
           <button
             className="rounded-lg md:hidden  focus:outline-none focus:shadow-outline"
             onClick={toggleMenu}
@@ -36,6 +66,7 @@ function sidebar() {
               ></path>
             </svg>
           </button>
+          </div>
         </div>
         <nav
           id="mainMenu"
@@ -44,27 +75,38 @@ function sidebar() {
           } md:block`}
         >
           <Link
+            // onClick={()=>setactive('home')}
             to={"/professional/"}
-            className="block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-gray-200 rounded-lg dark-mode:bg-gray-700 dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+            className={active=='home'?"block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-gray-200 rounded-lg":"block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-transparent rounded-lg"}
           >
             Dashboard
           </Link>
           <Link
+            // onClick={()=>setactive('profile')}
+
             to={"/professional/profile"}
-            className="block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+            className={active=='profile'?"block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-gray-200 rounded-lg":"block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-transparent rounded-lg"}
+
           >
             Profile
           </Link>
-          <a
-            className="block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
-            href="#"
+          <Link
+            // onClick={()=>setactive('wallet')}
+
+          to={"/professional/wallet"}
+          className={active=='wallet'?"block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-gray-200 rounded-lg":"block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-transparent rounded-lg"}
+
           >
             Transactions
-          </a>
+          </Link>
           <a
-           onClick={()=>navigate(`/professional/chat`)}
+           onClick={()=>{
+            navigate(`/professional/chat`)
+            // setactive('chat')
+          }}
 
-            className="block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+          className={active=='chat'?"block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-gray-200 rounded-lg":"block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-transparent rounded-lg"}
+
           >
             Messages
           </a>

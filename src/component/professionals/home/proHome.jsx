@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,lazy, Suspense } from "react";
 import professionalAxiosInterceptor from "../../../Axios/professionalsAxios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { proLogout } from "../../../Redux/professionalsState";
-import Graph from "../graph/graph";
+const Graph = lazy(() => import("../graph/graph"));
 import Cookies from "js-cookie";
 import { decodeJwt } from "jose";
 import "./proHome.css";
+import Loading from "../../loading/loading"
 
 function proHome() {
   const token = useSelector((store) => store.professional.Token);
@@ -14,6 +15,7 @@ function proHome() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const professionalsAxios = professionalAxiosInterceptor();
+  const [isLoading, setIsLoading] = useState(true);
   const [ProData, setProData] = useState('');
   const [Orders, setOrders] = useState([]);
   const [UpcomingWorks, setUpcomingWorks] = useState([]);
@@ -55,12 +57,12 @@ function proHome() {
       const firstTwoUpcomingWorks = upcoming.slice(0, 2);
 
       setUpcomingWorks(firstTwoUpcomingWorks);
+      setIsLoading(false);
     } catch (error) {
       console.error("Error fetching details:", error);
+      setIsLoading(false)
     }
   };
-  console.log(Orders);
-
   const completed = Orders.filter((data) => {
     return data.work_status.status === "completed";
   }).length;
@@ -79,7 +81,10 @@ function proHome() {
     }
   };
   return (
-    <div className="stats-holder flex-col gap-1 flex mt-2 basis-1 sm:flex-row">
+    <>
+    <Suspense fallback={<Loading/>}>
+     
+          <div className="stats-holder flex-col gap-1 flex mt-2 basis-1 sm:flex-row">
       <div className="stats basis-full sm:basis-3/4 ">
         <div className="cards flex flex-row gap-2 h-24 sm:h-[7rem] sm:gap-3 sm:flex-row md:gap-2 justify-center">
           <div className="card bg-gray-200 sm:w-3/12 flex justify-center items-center rounded-lg">
@@ -89,7 +94,7 @@ function proHome() {
               </h4>
               <div className="sm:flex items-center justify-between">
                 <h4 className="text-lg sm:text-2xl font-bold font-mono text-center">
-                  ₹{ProData.wallet}
+                  ₹{ProData?.wallet}
                 </h4>
                 <img
                   className="w-5 sm:w-10 m-auto"
@@ -138,7 +143,7 @@ function proHome() {
         </div>
         <div className="graph bg-gray-200  overflow-y-scroll  mt-5 me-0 rounded-lg">
           {/* graph */}
-          <Graph />
+          <Graph orders={Orders} />
         </div>
       </div>
       <div className="rightbar  sm:h-auto sm:basis-1/4 bg-gray-200  p-1 rounded-lg">
@@ -177,7 +182,7 @@ function proHome() {
         </div>
         <div className="mt-3  w-3/4 sm:w-full m-auto">
           <h4 className="mb-2 font-medium">Upcoming Works</h4>
-          {UpcomingWorks.map((item) => {
+          {UpcomingWorks?.map((item) => {
             const [year, month, day] = item.date.split("T")[0].split("-");
             const formattedDate = `${day} ${month} ${year}`;
 
@@ -189,7 +194,7 @@ function proHome() {
                 <div className="w-3/4">
                   <h4 className="font-semibold">{formattedDate}</h4>
                   <h4 className="text-sm font-medium">
-                    {item.address.location.split(" ")[0]}
+                    {item?.address?.location?.split(" ")[0]}
                   </h4>
                 </div>
                 <img
@@ -208,6 +213,8 @@ function proHome() {
         </div>
       </div>
     </div>
+      </Suspense>
+      </>
   );
 }
 

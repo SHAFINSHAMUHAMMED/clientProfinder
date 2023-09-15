@@ -24,15 +24,21 @@ function categoryManage() {
   useEffect(() => {
     AdminAxios.get("/listTypes")
       .then((res) => {
-        if (res.data.status) {
-          setdetails(res.data.category);
-          //   console.log(details[0]);
+        if (res?.data?.status) {
+          setdetails(res?.data?.category);
         } else {
           navigate("/admin/login");
         }
       })
       .catch((error) => {
         console.log(error);
+        if(error?.response?.status==404){
+          navigate("/admin/*")
+        }else if(error?.response?.status==500){
+          navigate("/admin/serverError")
+        }else{
+          navigate("/admin/serverError")
+        }
       });
   }, [type, deleted, count]);
 
@@ -42,24 +48,29 @@ function categoryManage() {
 
   const addTypes = async (e) => {
     e.preventDefault();
-    let typeList = typeRef.current.value.trim();
-    if (typeList == "" || typeList.length > 25) {
+    let typeList = typeRef.current.value?.trim();
+    if (typeList == "" || typeList?.length > 25) {
       return generateError("Enter Valid Field");
     }
     try {
       const res = await AdminAxios.post("/listTypes", { typeList });
-      if (res.data.status == true) {
-        console.log(res.data);
-        setType(res.data.types);
-        // console.log(type);
+      if (res?.data?.status == true) {
+        setType(res?.data?.types);
         setSucMsg("Done");
         typeRef.current.value = ""; // Clear the input field after form submission
       } else {
-        generateError(res.data.message);
+        generateError(res?.data?.message);
         typeRef.current.value = "";
       }
     } catch (error) {
       console.log(error);
+      if(error?.response?.status==404){
+        navigate("/admin/*")
+      }else if(error?.response?.status==500){
+        navigate("/admin/serverError")
+      }else{
+        navigate("/admin/serverError")
+      }
     }
   };
 
@@ -70,12 +81,19 @@ function categoryManage() {
       change = true;
     } catch (error) {
       console.log(error);
+      if(error?.response?.status==404){
+        navigate("/admin/*")
+      }else if(error?.response?.status==500){
+        navigate("/admin/serverError")
+      }else{
+        navigate("/admin/serverError")
+      }
     }
   };
 
   const submitEdit = async (e) => {
     e.preventDefault();
-    const editedData = editRef.current.value;
+    const editedData = editRef?.current?.value;
     setValue("");
     if (editedData == "") {
       return generateError("Fill the feilds");
@@ -88,7 +106,7 @@ function categoryManage() {
         `/editType?editedData=${editedData}&oldData=${oldData}`,
         null
       );
-      if (res.data.status == true) {
+      if (res?.data?.status == true) {
         setSucMsg("success");
         SetCount(count + 1);
         setEdit("");
@@ -96,19 +114,35 @@ function categoryManage() {
         setEdit("");
         generateError(res.data.message);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+      if(error?.response?.status==404){
+        navigate("/admin/*")
+      }else if(error?.response?.status==500){
+        navigate("/admin/serverError")
+      }else{
+        navigate("/admin/serverError")
+      }
+    }
   };
   const deleteType = async (type) => {
     try {
       const res = await AdminAxios.delete(`/deleteType?id=${type}`);
-      if (res.data.status == true) {
+      if (res?.data?.status == true) {
         setSucMsg("Success");
-        setdeleted(deleted + res.data.status);
+        setdeleted(deleted + res?.data?.status);
       } else {
-        generateError(res.data.message);
+        generateError(res?.data?.message);
       }
     } catch (error) {
       console.log(error);
+      if(error?.response?.status==404){
+        navigate("/admin/*")
+      }else if(error?.response?.status==500){
+        navigate("/admin/serverError")
+      }else{
+        navigate("/admin/serverError")
+      }
     }
   };
 
@@ -200,11 +234,11 @@ function categoryManage() {
                 {details.length > 0
                   ? details
                       .filter((type) =>
-                        type.name
-                          .toLowerCase()
-                          .includes(SearchInput.toLowerCase())
+                        type?.name
+                          ?.toLowerCase()
+                          ?.includes(SearchInput?.toLowerCase())
                       )
-                      .map((type, index) => {
+                      ?.map((type, index) => {
                         return (
                           <div
                             key={type._id}
@@ -216,14 +250,14 @@ function categoryManage() {
                                   {index + 1}.
                                 </div>
                                 <div className="text-slate-600">
-                                  {type.name}
+                                  {type?.name}
                                 </div>
                               </div>
                               <div className="flex gap-4 mr-2">
                                 <div>
                                   <button
                                     onClick={() => {
-                                      editType(type.name);
+                                      editType(type?.name);
                                       setValue(1);
                                     }}
                                   >
@@ -233,7 +267,7 @@ function categoryManage() {
                                 <div>
                                   <button
                                     onClick={() => {
-                                      deleteType(type._id);
+                                      deleteType(type?._id);
                                     }}
                                   >
                                     <i className="fa fa-trash text-red-600"></i>

@@ -20,7 +20,6 @@ export const professionalState = createSlice({
         },
         proImage(state,action){
             state.Image = action.payload.image
-            console.log(action.payload.image);
         },
         proLogout(state,action) {
             state.Token = ""

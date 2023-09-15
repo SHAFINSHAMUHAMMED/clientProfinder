@@ -10,7 +10,6 @@ const ProNavbar = () => {
   const proname = useSelector((state) => state.professional.proName);
   const proId = useSelector((store) => store.professional.proId);
   const proPhoto = useSelector((store)=> store.professional.proImage)
-  console.log(proPhoto);
   const proAxios = proAxiosInstance();
   const [ProData, setProData] = useState(null)
 

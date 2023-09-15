@@ -34,7 +34,6 @@ function Review({Id,popup,Proid}) {
         return
     }
     postReview()
-    console.log(`Rating: ${rating}, Review: ${reviewText}`);
   };
 
   const handleCancell = () => {
@@ -44,7 +43,6 @@ function Review({Id,popup,Proid}) {
   const postReview = async ()=> {
     try{
         const review = await userAxios.patch("/addReview",{Id,rating,reviewText,Proid})
-        console.log(review);
         if(review.status){
             Toast.fire({
                 icon: "success",

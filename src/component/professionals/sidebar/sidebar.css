@@ -4,3 +4,7 @@
     transition:all .4s ease-in-out;
   }
 } */
+.active-link-bg {
+  background-color: #007bff;
+  color: #fff; 
+}

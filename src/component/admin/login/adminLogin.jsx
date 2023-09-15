@@ -17,7 +17,7 @@ function AdminLogin() {
     e.preventDefault();
     const setTokenCookie = (token) => {
       const expiryDate = new Date();
-      const expirationMinutes = 60; //expiration time in minutes
+      const expirationMinutes = 300; //expiration time in minutes
       expiryDate.setTime(expiryDate.getTime() + expirationMinutes * 60 * 1000);
       Cookies.set("token", token, { expires: expiryDate });
     };
@@ -32,9 +32,8 @@ function AdminLogin() {
         if (res.data.status == false) {
           generateError(res.data.message);
         } else {
-          const token = res.data.adminSignUp.token;
-          console.log(token);
-          const name = res.data.adminSignUp.name;
+          const token = res?.data?.adminSignUp?.token;
+          const name = res?.data?.adminSignUp?.name;
           setTokenCookie(token);
           dispatch(adminLogin({ token: token }));
           dispatch(adminName({ name: name }));

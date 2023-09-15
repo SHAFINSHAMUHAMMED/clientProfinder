@@ -45,7 +45,6 @@ function forgetmail({ forgetPopup }) {
       .post("/forgotpassword", { otp, Email })
       .then((res) => {
         if (res.data.status) {
-          console.log(res.data);
           setLoading(false);
           setShowVerifyOTP(true);
           setshowSendOtp(false);
@@ -74,8 +73,6 @@ function forgetmail({ forgetPopup }) {
   }
   function onOTPVerify() {
     setLoading(true);
-    console.log(newPass);
-
     if (otp != generatedOTP) {
       setErrMsg("Invalid OTP");
       setLoading(false);
