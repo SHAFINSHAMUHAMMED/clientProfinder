@@ -4,7 +4,6 @@ import userAxiosInstance from "../../../Axios/userAxios";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useNavigate } from "react-router-dom";
 import { UserLogout, userLocation } from "../../../Redux/userState";
-import Chat from "../../chat/chat";
 import StarRating from "../../../component/user/starRating/StarRating";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -12,7 +11,7 @@ import Cookies from "js-cookie";
 import { decodeJwt } from "jose";
 import { Toaster, toast } from "react-hot-toast";
 import { CgSpinner } from "react-icons/cg";
-import Pagination from '../../pagination/Pagination'
+import Pagination from "../../pagination/Pagination";
 
 function proProfile() {
   const location = useLocation();
@@ -43,10 +42,9 @@ function proProfile() {
     const [orders, setorders] = useState([]);
     const [visibleReviewCount, setVisibleReviewCount] = useState(5); //visible count of no of reviews
     const [avgStar, setavgStar] = useState(0);
-    const [Show, setShow] = useState(1);
     const [WorkDone, setWorkDone] = useState(0);
     const [WorkCancelled, setWorkCancelled] = useState(0);
-    const [GalleryOpen,setGalleryOpen] = useState(false);
+    const [GalleryOpen, setGalleryOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [imgPerPage] = useState(15);
     const [Blur, setBlur] = useState(false);
@@ -103,6 +101,13 @@ function proProfile() {
         }
       } catch (error) {
         console.log(error);
+        if (error?.response?.status == 404) {
+          navigate("/*");
+        } else if (error?.response?.status == 500) {
+          navigate("/serverError");
+        } else {
+          navigate("/serverError");
+        }
       }
     };
 
@@ -164,8 +169,15 @@ function proProfile() {
               console.log(error);
               setbookings(null);
               setDisableFullTimeSlots(true);
+              if (error?.response?.status == 404) {
+                navigate("/*");
+              } else if (error?.response?.status == 500) {
+                navigate("/serverError");
+              } else {
+                navigate("/serverError");
+              }
             }
-          }, 500); // Simulate loading time of 2 seconds
+          }, 500); // Simulate loading time of .5 seconds
         }
       } catch (error) {
         console.log(error);
@@ -208,27 +220,32 @@ function proProfile() {
     };
     const indexOfLastImg = currentPage * imgPerPage;
     const indexOfFirstImg = indexOfLastImg - imgPerPage;
-    const currentImages = proData.gallery?.slice(indexOfFirstImg, indexOfLastImg);
+    const currentImages = proData.gallery?.slice(
+      indexOfFirstImg,
+      indexOfLastImg
+    );
 
     const handleGallery = () => {
-      setGalleryOpen(true)
-      setBlur(true)
-    }
+      setGalleryOpen(true);
+      setBlur(true);
+    };
     const closeGallery = () => {
       setGalleryOpen(false);
-      setBlur(false)
+      setBlur(false);
     };
     const handleImageClick = (image) => {
       setSelectedImage(image);
     };
-  
+
     const closeImagePopup = () => {
       setSelectedImage(null);
     };
 
     return (
       <div>
-        <div className={Blur?" p- md:p-10 w-full blur-sm":" p- md:p-10 w-full"}>
+        <div
+          className={Blur ? " p- md:p-10 w-full blur-sm" : " p- md:p-10 w-full"}
+        >
           <Toaster position="top-center" reverseOrder={false}></Toaster>
           <div className=" ">
             <div className=" w-full mx-auto z-10">
@@ -624,67 +641,66 @@ function proProfile() {
             </div>
           </div>
         </div>
-         {/* ///gallery//// */}
-         {GalleryOpen && (
-  <div className="absolute  top-[25%] left-24 right-24 p-10 flex justify-center items-center bg-slate-200 z-50">
-    <div className="bg-white rounded-lg p-4 w-3/4 h-4/5 overflow-hidden">
-      <button
-        className="top-2 left-2 bg-red-500 text-white rounded-full w-8 h-8 flex justify-center items-center text-lg font-bold cursor-pointer"
-        onClick={closeGallery}
-      >
-        X
-      </button>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 overflow-y-auto h-4/5">
-        {currentImages?.length > 0 ? (
-          currentImages.map((image) => (
-            <div
-              key={image._id}
-              className="relative cursor-pointer"
-              onClick={() => handleImageClick(image)}
-            >
-              <img
-                className="h-32 w-40 sm:h-64 sm:w-64 rounded-lg m-auto"
-                src={image.image}
-                alt=""
-              />
-            </div>
-          ))
-        ) : (
-          <p>No Images</p>
-        )}
-      </div>
+        {/* ///gallery//// */}
+        {GalleryOpen && (
+          <div className="absolute  top-[25%] left-24 right-24 p-10 flex justify-center items-center bg-slate-200 z-50">
+            <div className="bg-white rounded-lg p-4 w-3/4 h-4/5 overflow-hidden">
+              <button
+                className="top-2 left-2 bg-red-500 text-white rounded-full w-8 h-8 flex justify-center items-center text-lg font-bold cursor-pointer"
+                onClick={closeGallery}
+              >
+                X
+              </button>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 overflow-y-auto h-4/5">
+                {currentImages?.length > 0 ? (
+                  currentImages.map((image) => (
+                    <div
+                      key={image._id}
+                      className="relative cursor-pointer"
+                      onClick={() => handleImageClick(image)}
+                    >
+                      <img
+                        className="h-32 w-40 sm:h-64 sm:w-64 rounded-lg m-auto"
+                        src={image.image}
+                        alt=""
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <p>No Images</p>
+                )}
+              </div>
 
-      {/* Image Popup */}
-      {selectedImage && (
-        <div className="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg p-4">
-            <button
-              className="top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 flex justify-center items-center text-lg font-bold cursor-pointer"
-              onClick={closeImagePopup}
-            >
-              X
-            </button>
-            <div className="text-center">
-              <img
-                className="sm:max-h-96 sm:max-w-[500px] rounded-lg m-auto"
-                src={selectedImage.image}
-                alt=""
+              {/* Image Popup */}
+              {selectedImage && (
+                <div className="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-black bg-opacity-50">
+                  <div className="bg-white rounded-lg p-4">
+                    <button
+                      className="top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 flex justify-center items-center text-lg font-bold cursor-pointer"
+                      onClick={closeImagePopup}
+                    >
+                      X
+                    </button>
+                    <div className="text-center">
+                      <img
+                        className="sm:max-h-96 sm:max-w-[500px] rounded-lg m-auto"
+                        src={selectedImage.image}
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <Pagination
+                currentPage={currentPage}
+                totalPages={Math.ceil(proData.gallery?.length / imgPerPage)}
+                onPageChange={setCurrentPage}
+                page="adminList"
               />
             </div>
           </div>
-        </div>
-      )}
-
-      <Pagination
-        currentPage={currentPage}
-        totalPages={Math.ceil(proData.gallery?.length / imgPerPage)}
-        onPageChange={setCurrentPage}
-        page="adminList"
-      />
-    </div>
-  </div>
-)}
-
+        )}
       </div>
     );
   }

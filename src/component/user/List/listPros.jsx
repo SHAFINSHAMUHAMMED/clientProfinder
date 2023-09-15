@@ -4,11 +4,7 @@ import userAxiosInstance from "../../../Axios/userAxios";
 import { Link, useLocation } from "react-router-dom";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  UserLogout,
-  userLocation,
-  userLocationCoordinates,
-} from "../../../Redux/userState";
+import { UserLogout } from "../../../Redux/userState";
 import Pagination from "../../pagination/Pagination";
 import Location from "../../location/location";
 import Cookies from "js-cookie";
@@ -53,12 +49,24 @@ function listPros() {
       dispatch(UserLogout());
       navigate("/login");
     } else {
-      userAxios.get("/getPros").then((res) => {
-        if (res.data.status) {
-          setPros(res.data.pro);
-          setcategory(res.data.category);
-        }
-      });
+      userAxios
+        .get("/getPros")
+        .then((res) => {
+          if (res.data.status) {
+            setPros(res.data.pro);
+            setcategory(res.data.category);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          if (error?.response?.status == 404) {
+            navigate("/*");
+          } else if (error?.response?.status == 500) {
+            navigate("/serverError");
+          } else {
+            navigate("/serverError");
+          }
+        });
     }
     if (!location) {
       handleOpenLocationPopup();

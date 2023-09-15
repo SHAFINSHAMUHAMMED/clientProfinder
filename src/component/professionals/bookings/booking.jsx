@@ -49,6 +49,13 @@ function booking() {
       setorders(bookings);
     } catch (error) {
       console.error("Error fetching details:", error);
+      if (error?.response?.status == 404) {
+        navigate("/professional/*");
+      } else if (error?.response?.status == 500) {
+        navigate("/professional/serverError");
+      } else {
+        navigate("/professional/serverError");
+      }
     }
   };
 

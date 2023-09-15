@@ -15,23 +15,23 @@ function RegisterPro() {
   const PartTimeref = useRef();
   const Passwordref = useRef();
   const navigate = useNavigate();
-  const professionalsAxios = professionalsAxiosInterceptor()
+  const professionalsAxios = professionalsAxiosInterceptor();
   const [error, setError] = useState("");
   const [Cat, setCat] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [locationQuery, setlocationQuery] = useState('')
+  const [locationQuery, setlocationQuery] = useState("");
   const [filteredCategories, setFilteredCategories] = useState([]);
   const [Category, setCategory] = useState("");
   const [CatId, setCatId] = useState("");
   const [loading, setLoading] = useState(false);
-  const [Location, setLocation] = useState()
-  const [LocId, setLocId] = useState([])
+  const [Location, setLocation] = useState();
+  const [LocId, setLocId] = useState([]);
   const [locationSuggestions, setLocationSuggestions] = useState([]);
   const [map, setMap] = useState(null);
 
   const setErrMsg = (err) => {
     setLoading(false);
-    toast.error(err, { position: "bottom-center" })
+    toast.error(err, { position: "bottom-center" });
   };
   const setSucMsg = (ok) => toast.success(ok, { position: "bottom-center" });
 
@@ -47,9 +47,9 @@ function RegisterPro() {
       console.log(error);
     }
   };
-  const mapboxApi = 'pk.eyJ1Ijoic2hhZmluc2hhIiwiYSI6ImNsbGR1a3Y0NjBoeGozY24waHpqYWpxMnUifQ.S5EWRgs87QYFEffmJC0hjw'
+  const mapboxApi =
+    "pk.eyJ1Ijoic2hhZmluc2hhIiwiYSI6ImNsbGR1a3Y0NjBoeGozY24waHpqYWpxMnUifQ.S5EWRgs87QYFEffmJC0hjw";
   useEffect(() => {
-  
     fetchData();
   }, []);
 
@@ -70,7 +70,7 @@ function RegisterPro() {
   const sendId = (id) => {
     setCatId(id);
   };
- 
+
   const signUpForm = (event) => {
     event.preventDefault();
     setLoading(true);
@@ -78,10 +78,10 @@ function RegisterPro() {
     const email = Emailref.current.value;
     const phone = Phoneref.current.value;
     const category = CatId;
-    const location = {LocId, locationQuery };
+    const location = { LocId, locationQuery };
     const fullTime = FullTimeref.current.value;
     const partTime = PartTimeref.current.value;
-    const password = Passwordref.current.value;;
+    const password = Passwordref.current.value;
     // Validation
     if (!name || name.trim().length < 4) {
       setErrMsg("Enter Valid Name.");
@@ -150,6 +150,13 @@ function RegisterPro() {
       .catch((error) => {
         setLoading(false);
         console.log(error);
+        if (error?.response?.status == 404) {
+          navigate("/professional/*");
+        } else if (error?.response?.status == 500) {
+          navigate("/professional/serverError");
+        } else {
+          navigate("/professional/serverError");
+        }
       });
   };
 
@@ -162,11 +169,13 @@ function RegisterPro() {
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?access_token=${mapboxApi}`
       );
       const data = await response.json();
-      setLocationSuggestions(data.features.map((feature) => ({
-        place_name: feature.place_name,
-        latitude: feature.center[1], // Extract latitude
-        longitude: feature.center[0], // Extract longitude
-      })));
+      setLocationSuggestions(
+        data.features.map((feature) => ({
+          place_name: feature.place_name,
+          latitude: feature.center[1], // Extract latitude
+          longitude: feature.center[0], // Extract longitude
+        }))
+      );
     } catch (error) {
       console.error("Error fetching location suggestions:", error);
     }
@@ -175,17 +184,17 @@ function RegisterPro() {
     setLocation(location);
     setlocationQuery(location);
     setLocationSuggestions(""); // Clear the search query after selecting a category
-  
+
     // Find the selected location suggestion
     const selectedSuggestion = locationSuggestions.find(
       (suggestion) => suggestion.place_name === location
     );
     if (selectedSuggestion) {
       const { latitude, longitude } = selectedSuggestion;
-      let loc = []
-          loc[0] = longitude
-          loc[1] = latitude
-      setLocId(loc)
+      let loc = [];
+      loc[0] = longitude;
+      loc[1] = latitude;
+      setLocId(loc);
     }
   };
   return (
@@ -324,21 +333,21 @@ function RegisterPro() {
               />
             </div>
             {locationSuggestions.length > 0 && (
-  <ul className="border border-gray-300 rounded-md w-96  overflow-hidden max-h-36 ">
-    {locationSuggestions.map((suggestion) => (
-      <li
-        key={suggestion.id}
-        className="px-4 py-2 cursor-pointer hover:bg-gray-100"
-        onClick={() => {
-          handleLocationSelection(suggestion.place_name);
-          // sendLocationId(suggestion?.geometry.coordinates);
-        }}
-      >
-        {suggestion.place_name}
-      </li>
-    ))}
-  </ul>
-)}
+              <ul className="border border-gray-300 rounded-md w-96  overflow-hidden max-h-36 ">
+                {locationSuggestions.map((suggestion) => (
+                  <li
+                    key={suggestion.id}
+                    className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                    onClick={() => {
+                      handleLocationSelection(suggestion.place_name);
+                      // sendLocationId(suggestion?.geometry.coordinates);
+                    }}
+                  >
+                    {suggestion.place_name}
+                  </li>
+                ))}
+              </ul>
+            )}
             <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

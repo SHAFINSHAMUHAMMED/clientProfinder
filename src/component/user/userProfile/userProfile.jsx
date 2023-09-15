@@ -72,7 +72,14 @@ function userProfile() {
           const data = response.data.data;
           setuserData(data);
         } catch (error) {
-          console.error("Error fetching user details:", error);
+          console.error(error);
+          if (error?.response?.status == 404) {
+            navigate("/*");
+          } else if (error?.response?.status == 500) {
+            navigate("/serverError");
+          } else {
+            navigate("/serverError");
+          }
         }
       };
 
@@ -85,6 +92,13 @@ function userProfile() {
           setuserBookings(data);
         } catch (error) {
           console.error("Error fetching booking details:", error);
+          if (error?.response?.status == 404) {
+            navigate("/*");
+          } else if (error?.response?.status == 500) {
+            navigate("/serverError");
+          } else {
+            navigate("/serverError");
+          }
         }
       };
       fetchBookings();
@@ -124,7 +138,7 @@ function userProfile() {
               <div className="flex justify-center">
                 {userData && userData?.image ? (
                   <img
-                    src={userData?.image?userData?.image:'/icons/man.png'}
+                    src={userData?.image ? userData?.image : "/icons/man.png"}
                     className="rounded-full -mt-10 sm:-mt-20 border-4 object-center object-cover border-white mr-2 h-20 w-20 sm:h-36 sm:w-36"
                     alt="User Profile"
                   />

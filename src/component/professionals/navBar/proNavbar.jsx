@@ -29,7 +29,16 @@ const ProNavbar = () => {
           setProData(data);
         }
       }
-    });
+    }).catch((error)=>{
+      console.log(error);
+      if (error?.response?.status == 404) {
+        navigate("/professional/*");
+      } else if (error?.response?.status == 500) {
+        navigate("/professional/serverError");
+      } else {
+        navigate("/professional/serverError");
+      }
+    })
   }
   }, []);
   return (

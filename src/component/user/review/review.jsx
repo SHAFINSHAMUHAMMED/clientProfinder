@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { FaStar } from 'react-icons/fa';
+import React, { useState } from "react";
+import { FaStar } from "react-icons/fa";
 import Swal from "sweetalert2";
 import userAxiosInstance from "../../../Axios/userAxios";
 
-function Review({Id,popup,Proid}) {
+function Review({ Id, popup, Proid }) {
   const [rating, setRating] = useState(0);
-  const [reviewText, setReviewText] = useState('');
+  const [reviewText, setReviewText] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const userAxios = userAxiosInstance();
   const Toast = Swal.mixin({
@@ -29,50 +29,57 @@ function Review({Id,popup,Proid}) {
   };
 
   const handleSubmitReview = () => {
-    if(rating<1){
+    if (rating < 1) {
       setErrMsg("Please Add Rating.");
-        return
+      return;
     }
-    postReview()
+    postReview();
   };
-
   const handleCancell = () => {
-    popup(false)
-  }
-
-  const postReview = async ()=> {
-    try{
-        const review = await userAxios.patch("/addReview",{Id,rating,reviewText,Proid})
-        if(review.status){
-            Toast.fire({
-                icon: "success",
-                title: review.data.message,
-              }).then(() => {
-                setRating(0);
-                setReviewText('');
-                popup(false)
-              });
-           
-        }else{
-            Toast.fire({
-                icon: "error",
-                title: review.data.message,
-              }) 
-        }
-    }catch(error){
+    popup(false);
+  };
+  const postReview = async () => {
+    try {
+      const review = await userAxios.patch("/addReview", {
+        Id,
+        rating,
+        reviewText,
+        Proid,
+      });
+      if (review.status) {
         Toast.fire({
-            icon: "error",
-            title: 'Some Error Occuured',
-          }) 
+          icon: "success",
+          title: review.data.message,
+        }).then(() => {
+          setRating(0);
+          setReviewText("");
+          popup(false);
+        });
+      } else {
+        Toast.fire({
+          icon: "error",
+          title: review.data.message,
+        });
+      }
+    } catch (error) {
+      Toast.fire({
+        icon: "error",
+        title: "Some Error Occuured",
+      });
     }
-  }
-
+  };
 
   return (
     <div className="p-10 bg-white">
       <div className="bg-blue-400 flex items-center gap-3 p-3 rounded-md">
-        <img src="/icons/review.png" alt="Review Icon" className="w-8 h-8 sm:w-14 sm:h-14" />
-        <h5 className="text-white sm:text-lg font-semibold text-base">Add Your Review</h5>
+        <img
+          src="/icons/review.png"
+          alt="Review Icon"
+          className="w-8 h-8 sm:w-14 sm:h-14"
+        />
+        <h5 className="text-white sm:text-lg font-semibold text-base">
+          Add Your Review
+        </h5>
       </div>
       <div className="mt-8 text-center">
         <h1 className="text-2xl font-semibold mb-4">Rate this work</h1>
@@ -88,7 +95,9 @@ function Review({Id,popup,Proid}) {
               />
               <FaStar
                 className={`cursor-pointer ${
-                  rating >= index + 1 ? 'text-yellow-500' : 'text-gray-300 w-6 h-6'
+                  rating >= index + 1
+                    ? "text-yellow-500"
+                    : "text-gray-300 w-6 h-6"
                 }`}
               />
             </label>
@@ -96,7 +105,7 @@ function Review({Id,popup,Proid}) {
         </div>
         <p className="mt-4">
           {rating === 0
-            ? 'Please select a rating.'
+            ? "Please select a rating."
             : `You've selected ${rating} star(s).`}
         </p>
         {errMsg && <div className="text-red-500 mt-2 text-xs">{errMsg}</div>}

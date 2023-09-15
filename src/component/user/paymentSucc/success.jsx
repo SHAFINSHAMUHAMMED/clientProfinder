@@ -59,9 +59,12 @@ function Success({ orderData }) {
             style={{ backgroundColor: "#1DEE8A" }}
             className="h-8 p-2 rounded-lg text-center flex items-center justify-center mb-5"
           >
-            <Link to={"/profile"} className="inline-block align-middle text-xs">
+            <a
+              onClick={"/profile"}
+              className="inline-block align-middle text-xs"
+            >
               View Bookings
-            </Link>
+            </a>
           </button>
         </div>
       </div>

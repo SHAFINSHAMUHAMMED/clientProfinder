@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import userAxiosInstance from "../../../Axios/userAxios";
 import proAxiosInstance from "../../../Axios/professionalsAxios";
 import { useSelector, useDispatch } from "react-redux";
+import { Navigate, useNavigate } from "react-router-dom";
 import Otp from "../../professionals/otp/confirmationOtp";
 import Review from "../review/review";
 import { Toaster, toast } from "react-hot-toast";
 import Swal from "sweetalert2";
 
 function booking({ userBookings, update, count, role, active }) {
+
+  const navigate = useNavigate();
   const token = useSelector((state) => state.user.Token);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [Confirmation, setConfirmation] = useState(false);

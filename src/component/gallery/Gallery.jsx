@@ -3,50 +3,57 @@ import proAxiosInstance from "../../Axios/professionalsAxios";
 import { useSelector } from "react-redux";
 import { CgSpinner } from "react-icons/cg";
 import Swal from "sweetalert2";
-import { FaTrash } from "react-icons/fa"; 
-import Pagination from '../pagination/Pagination'
+import { useNavigate } from "react-router-dom";
+import { FaTrash } from "react-icons/fa";
+import Pagination from "../pagination/Pagination";
 import FadeLoader from "react-spinners/FadeLoader";
 
 function Gallery() {
-
   const proAxios = proAxiosInstance();
   const proId = useSelector((store) => store.professional.proId);
-
   const [selectedImages, setSelectedImages] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [loading2, setLoading2] = useState('');
+  const [loading2, setLoading2] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [Gallery,setGallery] = useState([])
-  const [Message,setMessgage] = useState('')
-  const [IsHovered,setIsHovered] = useState(null)
-  const [update,setupdate] = useState(false)
+  const [Gallery, setGallery] = useState([]);
+  const [Message, setMessgage] = useState("");
+  const [IsHovered, setIsHovered] = useState(null);
+  const [update, setupdate] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [imgPerPage] = useState(15);
+  const navigate = useNavigate();
   useEffect(() => {
     proAxios
       .get(`/getGallery?proId=${proId}`)
       .then((res) => {
-        if(res.data.gallery){
-          setGallery(res.data.gallery)
-          setIsLoading(false)
-        }else{
-          setIsLoading(false)
-          setMessgage(res.data.message)
+        if (res.data.gallery) {
+          setGallery(res.data.gallery);
+          setIsLoading(false);
+        } else {
+          setIsLoading(false);
+          setMessgage(res.data.message);
         }
       })
       .catch((error) => {
-        setIsLoading(false)
+        setIsLoading(false);
         console.error("Error:", error);
+        if (error?.response?.status == 404) {
+          navigate("/professional/*");
+        } else if (error?.response?.status == 500) {
+          navigate("/professional/serverError");
+        } else {
+          navigate("/professional/serverError");
+        }
       });
-      setupdate(false)
-  }, [proId,update]);
+    setupdate(false);
+  }, [proId, update]);
 
   const handleImageUpload = (event) => {
     const files = Array.from(event.target.files);
     const allowedExtensions = /\.(jpg|jpeg|png)$/i;
 
-    // Filter only valid image 
+    // Filter only valid image
     const validImages = files.filter((file) =>
       allowedExtensions.test(file.name)
     );
@@ -74,7 +81,7 @@ function Gallery() {
     e.preventDefault();
     setLoading(true);
     const formData = new FormData();
-    formData.append('proId', proId);
+    formData.append("proId", proId);
     for (let i = 0; i < selectedImages.length; i++) {
       console.log(selectedImages[i]);
       formData.append(`file`, selectedImages[i]);
@@ -86,23 +93,30 @@ function Gallery() {
         },
       })
       .then((res) => {
-      setLoading(false);
-      setupdate(true)
-      if(res.data.status){
-        Toast.fire({
-          icon: "success",
-          title: res.data.message,
-        }).then(() => {
-          setIsPopupOpen(false)
-        });
-      }
+        setLoading(false);
+        setupdate(true);
+        if (res.data.status) {
+          Toast.fire({
+            icon: "success",
+            title: res.data.message,
+          }).then(() => {
+            setIsPopupOpen(false);
+          });
+        }
       })
       .catch((error) => {
         console.log(error, "error in uploading");
+        if (error?.response?.status == 404) {
+          navigate("/professional/*");
+        } else if (error?.response?.status == 500) {
+          navigate("/professional/serverError");
+        } else {
+          navigate("/professional/serverError");
+        }
       });
   };
-  
-///delete selected image while upload
+
+  ///delete selected image while upload
   const handleRemoveImage = (index) => {
     const updatedImages = [...selectedImages];
     updatedImages.splice(index, 1);
@@ -110,10 +124,13 @@ function Gallery() {
   };
 
   const handleDeleteImage = (id) => {
-    const shouldDelete = window.confirm("Are you sure you want to delete this image?");
+    const shouldDelete = window.confirm(
+      "Are you sure you want to delete this image?"
+    );
     if (shouldDelete) {
       setLoading2(id);
-      proAxios.patch("/deleteImage", { proId: proId, img_id: id })
+      proAxios
+        .patch("/deleteImage", { proId: proId, img_id: id })
         .then((res) => {
           if (res.data.status) {
             setLoading2("");
@@ -123,6 +140,13 @@ function Gallery() {
         .catch((error) => {
           setLoading2("");
           console.log("Error:", error);
+          if (error?.response?.status == 404) {
+            navigate("/professional/*");
+          } else if (error?.response?.status == 500) {
+            navigate("/professional/serverError");
+          } else {
+            navigate("/professional/serverError");
+          }
         });
     }
   };
@@ -137,24 +161,24 @@ function Gallery() {
           <FadeLoader color="#242ae8" /> {/* Loading spinner */}
         </div>
       ) : (
-      <div className={isPopupOpen ? `blur-sm` : `blur-0`}>
-        <div className="text-end p-5">
-          <button
-            className="bg-gray-500 text-white px-2 py-1  "
-            onClick={() => document.getElementById("image-upload").click()}
-          >
-            Upload Images
-          </button>
-          <input
-  type="file"
-  name="file"
-  id="image-upload"
-  style={{ display: "none" }}
-  onChange={handleImageUpload}
-  multiple
-/>
-        </div>
-        {/* <div className="grid grid-cols-5 gap-2">
+        <div className={isPopupOpen ? `blur-sm` : `blur-0`}>
+          <div className="text-end p-5">
+            <button
+              className="bg-gray-500 text-white px-2 py-1  "
+              onClick={() => document.getElementById("image-upload").click()}
+            >
+              Upload Images
+            </button>
+            <input
+              type="file"
+              name="file"
+              id="image-upload"
+              style={{ display: "none" }}
+              onChange={handleImageUpload}
+              multiple
+            />
+          </div>
+          {/* <div className="grid grid-cols-5 gap-2">
         {selectedImages.map((image, index) => (
           <div key={index} className="relative">
             <img
@@ -171,44 +195,49 @@ function Gallery() {
           </div>
         ))}
       </div> */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 ">
-          {currentImages?.length>0 ?
-          currentImages.map((image)=>(
-            <div key={image._id}
-              onMouseEnter={() => setIsHovered(image._id)}
-              onMouseLeave={() => setIsHovered(null)}
-              className="relative">
-                 {loading2 === image._id ? (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <CgSpinner size={30} className="animate-spin text-blue-500" />
-                  </div>
-                ) : null}
-            <img
-              className="h-32 w-40 sm:h-64 sm:w-64 rounded-lg m-auto"
-              src={image.image}
-              alt=""
-            />
-            {IsHovered === image._id && (
-                  <button
-                    className="absolute top-2 right-14 sm:right-10 bg-red-500 text-white rounded-full p-1"
-                    onClick={() => handleDeleteImage(image._id)}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 ">
+            {currentImages?.length > 0
+              ? currentImages.map((image) => (
+                  <div
+                    key={image._id}
+                    onMouseEnter={() => setIsHovered(image._id)}
+                    onMouseLeave={() => setIsHovered(null)}
+                    className="relative"
                   >
-                    <FaTrash /> {/* Render the delete icon */}
-                  </button>
-                )}
+                    {loading2 === image._id ? (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <CgSpinner
+                          size={30}
+                          className="animate-spin text-blue-500"
+                        />
+                      </div>
+                    ) : null}
+                    <img
+                      className="h-32 w-40 sm:h-64 sm:w-64 rounded-lg m-auto"
+                      src={image.image}
+                      alt=""
+                    />
+                    {IsHovered === image._id && (
+                      <button
+                        className="absolute top-2 right-14 sm:right-10 bg-red-500 text-white rounded-full p-1"
+                        onClick={() => handleDeleteImage(image._id)}
+                      >
+                        <FaTrash /> {/* Render the delete icon */}
+                      </button>
+                    )}
+                  </div>
+                ))
+              : "No Images"}
           </div>
-            )):('No Images')}
-            </div>
-         
-      </div>
+        </div>
       )}
       {/* {console.log(Gallery.gallery.length)} */}
       <Pagination
-              currentPage={currentPage}
-              totalPages={Math.ceil(Gallery.gallery?.length / imgPerPage)}
-              onPageChange={setCurrentPage}
-              page="adminList"
-            />
+        currentPage={currentPage}
+        totalPages={Math.ceil(Gallery.gallery?.length / imgPerPage)}
+        onPageChange={setCurrentPage}
+        page="adminList"
+      />
       {isPopupOpen && (
         <div className="popup-content absolute w-3/4 sm:w-3/5 md:w-2/5 lg:w-3/5 bg-slate-300 left-[15%] top-[50%] sm:top-[65%] xl:top-[60%] sm:left-[20%] md:left-[40%] lg:left-[30%] xl:left-[28%] rounded-md">
           <div className="popup-header flex justify-between items-center p-5">
@@ -253,19 +282,21 @@ function Gallery() {
                 </div>
               ))}
             </div>
-            <form onSubmit={handleUploadToDB}
+            <form
+              onSubmit={handleUploadToDB}
               encType="multipart/form-data"
-              className="popup-footer flex justify-end">
+              className="popup-footer flex justify-end"
+            >
               <button
-              type='submit'
+                type="submit"
                 className="bg-blue-500 text-white px-2 py-1 rounded mb-5"
                 // onClick={handleUploadToDB}
               >
-               {loading ? (
-                <CgSpinner size={20} className="animate-spin mr-2" />
-              ) : (
-                "Upload"
-              )}
+                {loading ? (
+                  <CgSpinner size={20} className="animate-spin mr-2" />
+                ) : (
+                  "Upload"
+                )}
               </button>
             </form>
           </div>

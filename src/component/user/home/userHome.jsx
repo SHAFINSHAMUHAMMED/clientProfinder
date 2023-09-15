@@ -54,20 +54,30 @@ function userHome() {
       dispatch(UserLogout());
       navigate("/");
     }
-    userAxios.get("/getCategory").then((res) => {
-      if (res.data.status) {
-        setcategory(res.data.category);
-      } else {
-        setcategory("");
-      }
-    }).catch((error)=>{
-      console.log(error);
-    })
+    userAxios
+      .get("/getCategory")
+      .then((res) => {
+        if (res.data.status) {
+          setcategory(res.data.category);
+        } else {
+          setcategory("");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error?.response?.status == 404) {
+          navigate("/*");
+        } else if (error?.response?.status == 500) {
+          navigate("/serverError");
+        } else {
+          navigate("/serverError");
+        }
+      });
     if (token && !userLocation) {
       handleOpenLocationPopup();
     }
   }, [navigate, token]);
-  
+
   const handleSearchChange = (event) => {
     const query = event.target.value;
     setSearchQuery(query);
@@ -79,7 +89,7 @@ function userHome() {
   const handleCategorySelection = (categoryName) => {
     setCategory(categoryName);
     setSearchQuery(categoryName);
-    setFilteredCategories(""); // Clear the search query after selecting a category
+    setFilteredCategories(""); // Clear the search query
   };
   const handleOpenLocationPopup = () => {
     setLocationPopupVisible(true);
@@ -196,7 +206,7 @@ function userHome() {
               </div>
             </div>
             {filteredCategories?.length > 0 ? (
-              <ul className="border border-gray-300 rounded-md overflow-y-auto max-h-28 w-1/2"> 
+              <ul className="border border-gray-300 rounded-md overflow-y-auto max-h-28 w-1/2">
                 {filteredCategories?.map((cat) => (
                   <li
                     key={cat._id}

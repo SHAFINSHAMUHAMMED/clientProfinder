@@ -55,32 +55,6 @@ function Location({ onCloseLocationPopup }) {
       setLocId(loc);
     }
   };
-  // const getLocation = () => {
-  //   if (navigator.geolocation) {
-  //     navigator.geolocation.getCurrentPosition(
-  //       async (position) => {
-  //         setLatitude(position.coords.latitude);
-  //         setLongitude(position.coords.longitude);
-  //         try {
-  //           const response = await axios.get(
-  //             `https://api.opencagedata.com/geocode/v1/json?key=e8f053bca9224cbe998fa030162df296&q=${position.coords.latitude}+${position.coords.longitude}`
-  //           );
-
-  //           if (response.data.results.length > 0) {
-  //             setLocationName(response.data.results[0].formatted);
-  //           }
-  //         }  catch (error) {
-  //           console.error('Error getting location:', error);
-  //         }
-  //       },
-  //       (error) => {
-  //         console.error('Error getting location:', error);
-  //       }
-  //     );
-  //   } else {
-  //     console.error('Geolocation is not supported by this browser.');
-  //   }
-  // };
   return (
     <div className="fixed z-50 inset-0 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">

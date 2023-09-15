@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { proLogout } from "../../../Redux/professionalsState";
@@ -9,7 +9,7 @@ import "./sidebar.css";
 function sidebar() {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [active, setactive] = useState('')
+  const [active, setactive] = useState("");
   const token = useSelector((store) => store.professional.Token);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -52,20 +52,22 @@ function sidebar() {
             <img src="/loginpage/logo2.png" alt="" />
           </a>
           <div className="flex gap-5 md:gap-10">
-          <div onClick={logout} className="block md:hidden">{token?'logout':'login'}</div>
-          <button
-            className="rounded-lg md:hidden  focus:outline-none focus:shadow-outline"
-            onClick={toggleMenu}
-          >
-            <svg fill="currentColor" viewBox="0 0 20 20" className="w-6 h-6">
-              <path
-                id="menuIcon"
-                fillRule="evenodd"
-                d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM9 15a1 1 0 011-1h6a1 1 0 110 2h-6a1 1 0 01-1-1z"
-                clipRule="evenodd"
-              ></path>
-            </svg>
-          </button>
+            <div onClick={logout} className="block md:hidden">
+              {token ? "logout" : "login"}
+            </div>
+            <button
+              className="rounded-lg md:hidden  focus:outline-none focus:shadow-outline"
+              onClick={toggleMenu}
+            >
+              <svg fill="currentColor" viewBox="0 0 20 20" className="w-6 h-6">
+                <path
+                  id="menuIcon"
+                  fillRule="evenodd"
+                  d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM9 15a1 1 0 011-1h6a1 1 0 110 2h-6a1 1 0 01-1-1z"
+                  clipRule="evenodd"
+                ></path>
+              </svg>
+            </button>
           </div>
         </div>
         <nav
@@ -77,7 +79,11 @@ function sidebar() {
           <Link
             // onClick={()=>setactive('home')}
             to={"/professional/"}
-            className={active=='home'?"block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-gray-200 rounded-lg":"block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-transparent rounded-lg"}
+            className={
+              active == "home"
+                ? "block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-gray-200 rounded-lg"
+                : "block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-transparent rounded-lg"
+            }
           >
             Dashboard
           </Link>
@@ -85,28 +91,36 @@ function sidebar() {
             // onClick={()=>setactive('profile')}
 
             to={"/professional/profile"}
-            className={active=='profile'?"block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-gray-200 rounded-lg":"block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-transparent rounded-lg"}
-
+            className={
+              active == "profile"
+                ? "block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-gray-200 rounded-lg"
+                : "block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-transparent rounded-lg"
+            }
           >
             Profile
           </Link>
           <Link
             // onClick={()=>setactive('wallet')}
 
-          to={"/professional/wallet"}
-          className={active=='wallet'?"block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-gray-200 rounded-lg":"block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-transparent rounded-lg"}
-
+            to={"/professional/wallet"}
+            className={
+              active == "wallet"
+                ? "block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-gray-200 rounded-lg"
+                : "block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-transparent rounded-lg"
+            }
           >
             Transactions
           </Link>
           <a
-           onClick={()=>{
-            navigate(`/professional/chat`)
-            // setactive('chat')
-          }}
-
-          className={active=='chat'?"block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-gray-200 rounded-lg":"block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-transparent rounded-lg"}
-
+            onClick={() => {
+              navigate(`/professional/chat`);
+              // setactive('chat')
+            }}
+            className={
+              active == "chat"
+                ? "block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-gray-200 rounded-lg"
+                : "block px-4 py-2 mt-2 text-sm font-semibold text-gray-900 bg-transparent rounded-lg"
+            }
           >
             Messages
           </a>
@@ -145,7 +159,6 @@ function sidebar() {
               </div>
             </div>
           </div>
-          {/* Additional Flowtrail UI elements can be added here */}
         </nav>
       </div>
     </div>

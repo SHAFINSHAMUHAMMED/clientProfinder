@@ -24,7 +24,7 @@ function EditProfile({
   const [Cat, setCat] = useState("");
   const [loading, setLoading] = useState(false);
   const [skills, setSkills] = useState([]);
-  const [newSkill, setNewSkill] = useState({skill: "", _id: null});
+  const [newSkill, setNewSkill] = useState({ skill: "", _id: null });
   const [description, setDescription] = useState("");
   const [formdata, setFormdata] = useState({
     phone: userData.phone,
@@ -75,32 +75,37 @@ function EditProfile({
     }));
   };
   const handleAddSkill = () => {
-    if(formdata.skills.length<5){
-  if (newSkill && newSkill.skill.trim() !== "" && newSkill.skill.trim().length<=15 && newSkill.skill.trim().length>3) {
-    const updatedSkills = [...skills, newSkill];
-    setSkills(updatedSkills);
+    if (formdata.skills.length < 5) {
+      if (
+        newSkill &&
+        newSkill.skill.trim() !== "" &&
+        newSkill.skill.trim().length <= 15 &&
+        newSkill.skill.trim().length > 3
+      ) {
+        const updatedSkills = [...skills, newSkill];
+        setSkills(updatedSkills);
+        setFormdata((prevData) => ({
+          ...prevData,
+          skills: [...prevData.skills, newSkill],
+        }));
+        setNewSkill({ skill: "", _id: null });
+        setErrMsg("");
+      } else {
+        setErrMsg("Enter Valid Skill");
+      }
+    } else {
+      setErrMsg("Please Delete to add New");
+    }
+  };
+  const handleDeleteSkill = (index) => {
+    const updatedSkills = [...formdata.skills];
+    updatedSkills.splice(index, 1);
     setFormdata((prevData) => ({
       ...prevData,
-      skills: [...prevData.skills, newSkill],
+      skills: updatedSkills,
     }));
-    setNewSkill({skill:"", _id:null });
-    setErrMsg("");
-  } else {
-    setErrMsg('Enter Valid Skill');
-  }
-}else{
-  setErrMsg('Please Delete to add New')
-}
-};
-const handleDeleteSkill = (index) => {
-  const updatedSkills = [...formdata.skills];
-  updatedSkills.splice(index, 1);
-  setFormdata((prevData) => ({
-    ...prevData,
-    skills: updatedSkills,
-  }));
-  setSkills(updatedSkills);
-};
+    setSkills(updatedSkills);
+  };
 
   const fetchData = async () => {
     try {
@@ -112,6 +117,13 @@ const handleDeleteSkill = (index) => {
       }
     } catch (error) {
       console.log(error);
+      if (error?.response?.status == 404) {
+        navigate("/professional/*");
+      } else if (error?.response?.status == 500) {
+        navigate("/professional/serverError");
+      } else {
+        navigate("/professional/serverError");
+      }
     }
   };
 
@@ -159,7 +171,8 @@ const handleDeleteSkill = (index) => {
       formdata.phone === userData.phone &&
       formdata.file === userData.image &&
       formdata.description === userData.description &&
-      formdata.skills[formdata.skills.length-1].skill === userData.skills[userData.skills.length-1].skill
+      formdata.skills[formdata.skills.length - 1].skill ===
+        userData.skills[userData.skills.length - 1].skill
     ) {
       // No changes made, display an error message
       setErrMsg("No changes were made.");
@@ -215,6 +228,16 @@ const handleDeleteSkill = (index) => {
             navigate("/professional/profile");
           });
         }
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error?.response?.status == 404) {
+          navigate("/professional/*");
+        } else if (error?.response?.status == 500) {
+          navigate("/professional/serverError");
+        } else {
+          navigate("/professional/serverError");
+        }
       });
   };
   const handleCancelButton = () => {
@@ -255,7 +278,9 @@ const handleDeleteSkill = (index) => {
               alt="...."
               className="avatar rounded-full w-10 h-10 lg:w-20 lg:h-20 mb-2"
             />
-            <span className=" text-xs sm:text-base text-blue-500">Choose Image</span>
+            <span className=" text-xs sm:text-base text-blue-500">
+              Choose Image
+            </span>
           </label>
           <div className="mb-2">
             <input
@@ -300,29 +325,10 @@ const handleDeleteSkill = (index) => {
                 onChange={handlePhoneChange}
                 placeholder="Your Dial number"
                 className="w-full p-1 text-sm border rounded"
-
               />
             </div>
           </div>
           <div className="flex justify-between">
-            {/* <div className="mb-2">
-              <label
-                htmlFor="location"
-                className="block text-left font-medium mb-1"
-              >
-                Your Category
-              </label>
-              <input
-                type="text"
-                name="location"
-                id="location"
-                defaultValue={formdata.category.name}
-                onChange={handleSearchChange}
-                placeholder="Your Dial number"
-                className="w-full p-2 border rounded"
-              />
-            </div> */}
-
             <div className="mb-2">
               <label
                 htmlFor="skills"
@@ -337,7 +343,10 @@ const handleDeleteSkill = (index) => {
                   id="skills"
                   value={newSkill.skill}
                   onChange={(e) =>
-                    setNewSkill({ skill: e.target.value.toLocaleUpperCase(), _id: null })
+                    setNewSkill({
+                      skill: e.target.value.toLocaleUpperCase(),
+                      _id: null,
+                    })
                   }
                   placeholder="Your Skills"
                   className="w-full p-1 text-sm border rounded"
@@ -365,28 +374,9 @@ const handleDeleteSkill = (index) => {
                 onChange={handlePartimeChange}
                 placeholder="Your Part Time "
                 className="w-full p-1 text-sm border rounded"
-
               />
             </div>
           </div>
-          {/* {filteredCategories.length > 0 ? (
-              <ul className="border border-gray-300 rounded-md overflow-y-auto max-h-36">
-                {filteredCategories.map((category) => (
-                  <li
-                    key={category._id}
-                    className="px-4 py-2 cursor-pointer hover:bg-gray-100"
-                    onClick={() => {
-                      handleCategorySelection(category.name),
-                        sendId(category._id);
-                    }}
-                  >
-                    {category.name}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              ""
-            )} */}
           <div className="flex">
             <div className="mb-2">
               <label
@@ -415,7 +405,7 @@ const handleDeleteSkill = (index) => {
             <textarea
               name="description"
               id="description"
-              value={formdata.description?formdata.description:''}
+              value={formdata.description ? formdata.description : ""}
               onChange={handleDescriptionChange}
               placeholder="Your Description"
               className="w-full p-1 text-sm border rounded"
@@ -427,39 +417,36 @@ const handleDeleteSkill = (index) => {
                 Added Skills:
               </label>
               <div className="border text-center sm:flex flex-wrap border-gray-300 rounded p-2">
-
-  {formdata.skills?.length ?
-  formdata.skills.map((skill, index) => (
-    <div key={index} className="flex  justify-start mb-1">
-      <span className="bg-gray-200 text-xs font-medium rounded-xl px-1 sm:px-2 py-1 ">
-        {skill.skill}
-        <button
-          type="button"
-          onClick={() => handleDeleteSkill(index)}
-          className="text-red-500 ml-2 hover:text-red-700"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4 inline"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-      </span>
-    </div>
-  )):'no skills'}
-</div>
-
-
-
+                {formdata.skills?.length
+                  ? formdata.skills.map((skill, index) => (
+                      <div key={index} className="flex  justify-start mb-1">
+                        <span className="bg-gray-200 text-xs font-medium rounded-xl px-1 sm:px-2 py-1 ">
+                          {skill.skill}
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteSkill(index)}
+                            className="text-red-500 ml-2 hover:text-red-700"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-4 w-4 inline"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M6 18L18 6M6 6l12 12"
+                              />
+                            </svg>
+                          </button>
+                        </span>
+                      </div>
+                    ))
+                  : "no skills"}
+              </div>
             </div>
           )}
           {errMsg && <div className="text-red-500 mb-2">{errMsg}</div>}

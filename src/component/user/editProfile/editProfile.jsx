@@ -129,9 +129,9 @@ function EditProfile({
         if(error?.response?.status==404){
           navigate("/*")
         }else if(error?.response?.status==500){
-          // navigate("/serverError")
+          navigate("/serverError")
         }else{
-          // navigate("/serverError")
+          navigate("/serverError")
         }
       });
   };

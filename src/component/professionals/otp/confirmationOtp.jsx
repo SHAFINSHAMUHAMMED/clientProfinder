@@ -2,7 +2,6 @@ import { BsFillShieldLockFill, BsTelephoneFill } from "react-icons/bs";
 import { CgSpinner } from "react-icons/cg";
 import professionalsAxiosInterceptor from "../../../Axios/professionalsAxios";
 import { useDispatch } from "react-redux";
-// import { proLogin, proName } from "../../Redux/professionalsState";
 import { useNavigate, Link } from "react-router-dom";
 import OtpInput from "otp-input-react";
 import React, { useState, useRef } from "react";
@@ -99,7 +98,6 @@ function confirmationOtp({
               title: "Success",
             });
           }
-          ///////////
         } else {
           const message = "Something went wrong";
           toast.error(message);
