@@ -8,11 +8,12 @@ import UserList from "../pages/admin/userList";
 import Category from "../pages/admin/category";
 import WithdrawReq from "../pages/admin/withdrawReq";
 import Transactions from "../pages/admin/transactions"
+import Kyc from "../pages/admin/kycVerify"
 import Error from "../component/errorpage/error404"
 import Error500 from "../component/errorpage/error500"
 function admin() {
   const IsAuth = useSelector((state) => state.admin);
-  console.log(IsAuth);
+  
   return (
     <div>
       <Routes>
@@ -23,6 +24,7 @@ function admin() {
         <Route path="/category" element={IsAuth.Token ?<Category />:<Login/>} />
         <Route path="/withdrawReq" element={IsAuth.Token ?<WithdrawReq/>:<Login/>}/>
         <Route path="/transactions" element={IsAuth.Token?<Transactions/>: <Login/>}/>
+        <Route path="/kycValidation" element={IsAuth.Token?<Kyc/>:<Login/>}/>
         <Route path="/serverError" element={<Error500 role={'admin'}/>}/>
         <Route path="/*" element={<Error role={'admin'}/>}/>
 

@@ -118,6 +118,7 @@ export default function Example() {
 
               {/* Logo (centered on small screens) */}
               <img
+                onClick={()=>navigate('/')}
                 className="h-10 w-auto sm:hidden"
                 src="/loginpage/logo2.png"
                 alt="My Company"
@@ -125,6 +126,7 @@ export default function Example() {
 
               {/* Show the second logo for screens md and larger */}
               <img
+                onClick={()=>navigate('/')}
                 className="h-10 w-auto hidden sm:block"
                 src="/loginpage/logo2.png"
                 alt="My Company"

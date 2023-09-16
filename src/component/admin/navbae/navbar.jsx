@@ -109,7 +109,7 @@ function Navbar() {
                   }`}
                 >
                   <div className="px-2 pt-2 pb-4">
-                    <ul className="flex flex-col  md:text-right px-2 pt-2 pb-4 bg-white rounded-md shadow-lg">
+                    <ul className="flex flex-col  md:text-right px-5 pt-2 pb-4 bg-white rounded-md shadow-lg">
                       <li className="py-2">
                         <Link
                           to={"/admin/category"}
@@ -126,6 +126,15 @@ function Navbar() {
                           className="text-gray-900 hover:text-gray-700"
                         >
                           Withdrawals
+                        </Link>
+                      </li>
+                      <li className="py-2">
+                        <Link
+                        to={"/admin/kycValidation"}
+                          href="#"
+                          className="text-gray-900 hover:text-gray-700"
+                        >
+                          KYC Verify
                         </Link>
                       </li>
                       <li className="py-2">

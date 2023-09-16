@@ -20,8 +20,11 @@ function wallet({ role }) {
   const proid = useSelector((state) => state.professional.proId);
   const [userData, setuserData] = useState("");
   const [Transaction, setTransaction] = useState([]);
+  const [SendKyc, setSendKyc] = useState(false);
+  const [NotKycVerified, setNotKycVerified] = useState(false);
   const [activeStatus, setActiveStatus] = useState("in");
   const [withdrawForm, setwithdrawForm] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
   const [Msg, setMsg] = useState("");
   const amountRef = useRef(null);
   const accountHolderRef = useRef(null);
@@ -88,14 +91,16 @@ function wallet({ role }) {
         setTransaction(data);
       }
     });
-  }, []);
+  }, [SendKyc]);
 
   let filter = "";
   if (Transaction?.length > 0 && activeStatus == "in") {
     filter = "";
     filter = Transaction?.filter((item) => item?.PaymentType === "in");
   } else {
-    filter = Transaction?.filter((item) => item?.withdrawStatus === "completed");
+    filter = Transaction?.filter(
+      (item) => item?.withdrawStatus === "completed"
+    );
   }
 
   const handleActive = (active) => {
@@ -124,6 +129,14 @@ function wallet({ role }) {
   function withdrawHandle() {
     if (userData?.wallet < 100) {
       setMsg("Not Enough Balance");
+    } else if (userData?.kyc == "notSend") {
+      setSendKyc(true);
+    } else if (userData?.kyc == "uploaded") {
+      setSendKyc(false);
+      setMsg("KYC Under Process.");
+    } else if (userData?.kyc == "rejected") {
+      setSendKyc(true);
+      setMsg("KYC Rejected");
     } else {
       setwithdrawForm(true);
     }
@@ -229,6 +242,63 @@ function wallet({ role }) {
       });
   };
 
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    const allowedExtensions = /\.(jpg|jpeg|png)$/i;
+
+    if (file && allowedExtensions.test(file.name)) {
+      setSelectedImage(file);
+    } else {
+      alert("Please select a valid image file (JPEG or PNG).");
+    }
+  };
+  const handleUpload = () => {
+    // Check image
+    if (selectedImage) {
+      const formData = new FormData();
+      formData.append("file", selectedImage);
+      formData.append("id", id);
+      formData.append("role", role);
+
+      axios
+        .post("/kycUpload", formData)
+        .then((response) => {
+          if (response.data.status) {
+            setSelectedImage("");
+          }
+          setSendKyc(!SendKyc);
+        })
+        .catch((error) => {
+          console.error("Error uploading image:", error);
+          if (error?.response?.status == 404) {
+            if (role == "user") {
+              navigate("/*");
+            } else {
+              navigate("/professional/*");
+            }
+          } else if (error?.response?.status == 500) {
+            if (role == "user") {
+              navigate("/serverError");
+            } else {
+              navigate("/professional/serverError");
+            }
+          } else {
+            if (role == "user") {
+              navigate("/serverError");
+            } else {
+              navigate("/professional/serverError");
+            }
+          }
+        });
+    } else {
+      alert("Please select an image before uploading.");
+    }
+  };
+
+  const mainDivStyle = selectedImage
+    ? { backgroundImage: `url(${selectedImage})`, backgroundSize: "cover" }
+    : {};
+
   return (
     <div className="bg-gray-300 pb-8 mt-5 rounded-md">
       <div className="mx-auto container flex justify-center py-6 sm:py-16 sm:px-4">
@@ -242,9 +312,9 @@ function wallet({ role }) {
               background: "linear-gradient(to bottom, #5050F9, #7777D6)",
               backgroundRepeat: "no-repeat",
               backgroundSize: "100% 150%",
-              color: "white", // Text color
-              padding: "1.5rem", // Adjust padding as needed
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", // Box shadow
+              color: "white",
+              padding: "1.5rem",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
             }}
           >
             <div className="h-full flex flex-col justify-between">
@@ -271,14 +341,65 @@ function wallet({ role }) {
                   <div className="text-lg sm:text-2xl font-bold sm:font-semibold">
                     ₹{userData?.wallet ? userData?.wallet : 0}
                   </div>
-                  <button
-                    onClick={withdrawHandle}
-                    class=" text-xs bg-indigo-400 hover:bg-indigo-700 text-white font-semibold py-1 px-1 rounded"
-                  >
-                    Withdraw
-                  </button>
+                  <div className="">
+                    <button
+                      onClick={withdrawHandle}
+                      class=" text-xs bg-indigo-400 hover:bg-indigo-700 text-white font-semibold py-1 px-1 rounded"
+                    >
+                      Withdraw
+                    </button>
+                    <div className="text-end">
+                      {SendKyc ? (
+                        <div>
+                          {selectedImage ? (
+                            <div>
+                              <button
+                                className="bg-blue-500 text-white"
+                                onClick={() => {
+                                  setSelectedImage(null);
+                                }}
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          ) : (
+                            <div>
+                              <button
+                                className="bg-blue-500 text-white"
+                                onClick={() =>
+                                  document
+                                    .getElementById("image-upload")
+                                    .click()
+                                }
+                              >
+                                Upload Image
+                              </button>
+                              <input
+                                type="file"
+                                name="file"
+                                id="image-upload"
+                                style={{ display: "none" }}
+                                onChange={handleImageUpload}
+                                accept=".jpg, .jpeg, .png"
+                              />
+                            </div>
+                          )}
+                          {selectedImage && (
+                            <button
+                              className="bg-purple-400 text-white"
+                              onClick={handleUpload}
+                            >
+                              Upload
+                            </button>
+                          )}
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                  </div>
                 </div>
-                <h6 className="text-[70%] text-red-800">{Msg ? Msg : ""}</h6>
+                <h6 className="text-[90%] text-yellow-400">{Msg ? Msg : ""}</h6>
               </div>
             </div>
           </div>
@@ -439,9 +560,8 @@ function wallet({ role }) {
                             </span>
                           </h6>
                         ) : (
-                          <h6 className="text-center f text-[90%]"> 
+                          <h6 className="text-center f text-[90%]">
                             To:{" "}
-
                             <span className="text-center font-semibold text-[90%]">
                               {data?.accDetails?.accHolder}
                             </span>
@@ -456,11 +576,17 @@ function wallet({ role }) {
                                 alt=""
                               />
                               <h6 className="text-[80%]">
-                                {data?.orderId?.address?.location?.split(" ")[0]}
+                                {
+                                  data?.orderId?.address?.location?.split(
+                                    " "
+                                  )[0]
+                                }
                               </h6>
                             </>
                           ) : (
-                            <h6 className="text-[80%]">{data?.accDetails?.accNo}</h6>
+                            <h6 className="text-[80%]">
+                              {data?.accDetails?.accNo}
+                            </h6>
                           )}
                         </div>
                       </div>

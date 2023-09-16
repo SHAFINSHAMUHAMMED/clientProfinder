@@ -485,14 +485,14 @@ function confirmBooking() {
                     <h3 className="text-xl font-bold ps-5 pb-5">Payment</h3>
                     <div className="flex justify-between lg:m-4 xl:m-5 mb-2">
                       <h2 className="text-sm lg:text-lg font-medium">Name</h2>
-                      <h2 className="lg:text-lg font-mono">{proData.name}</h2>
+                      <h2 className="lg:text-lg font-mono">{proData?.name}</h2>
                     </div>
                     <div className="flex justify-between lg:m-4 xl:m-5 pb-8 sm:pb-14">
                       <h2 className="text-sm lg:text-lg font-medium">
                         Profession
                       </h2>
                       <h2 className="lg:text-lg font-mono">
-                        {proData.category.name}
+                        {proData?.category?.name}
                       </h2>
                     </div>
                     <div

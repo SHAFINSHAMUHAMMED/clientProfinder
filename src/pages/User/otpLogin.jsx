@@ -121,7 +121,7 @@ function otpLogin() {
           <div>
             <Toaster toastOptions={{ duration: 4000 }} />
             <div id="recaptcha-container"></div>
-            <div className="w-96 h-96  bg-gray-300 flex flex-col gap-4 items-center rounded-lg p-4 m-10 md:m-10">
+            <div className="w-fit sm:w-96 sm:h-96  bg-gray-300 flex flex-col gap-4 items-center rounded-lg p-4 m-auto md:m-10">
               <div className="mt-5">
                 <img src="/loginpage/logo2.png" alt="Your Image" />
               </div>

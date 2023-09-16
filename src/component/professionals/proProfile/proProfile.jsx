@@ -110,10 +110,10 @@ function userProfile() {
         <div className="bg-slate-200 rounded-md">
           <div className="flex justify-between border-b border-black p-3 sm:p-10">
             <div className="flex gap-3 ">
-              {ProData && ProData.image ? (
+              {ProData && ProData?.image ? (
                 <img
                   className="w-10 h-10 sm:w-20 sm:h-20 rounded-full"
-                  src={ProData.image}
+                  src={ProData?.image}
                   alt=""
                 />
               ) : (
@@ -126,18 +126,19 @@ function userProfile() {
 
               <div className="">
                 <h2 className="text-sm sm:text-lg font-medium">
-                  {ProData ? ProData.name : "Name"}
+                  {ProData ? ProData?.name : "Name"}
                 </h2>
                 <div className="sm:flex gap-2">
                   <h5 className=" text-sm sm:text-base">
-                    {ProData ? ProData.category.name : "Category"}
+                    {ProData ? ProData?.category?.name : "Category"}
                   </h5>
                   <div className="flex">
                     <div className="mt-1.5 sm:mt-2 w-16  sm:w-full">
                       <Star
                         rating={
                           ProData
-                            ? ProData.rating.stars / ProData.rating.TotalReviews
+                            ? ProData?.rating?.stars /
+                              ProData?.rating?.TotalReviews
                             : 0
                         }
                       />
@@ -253,21 +254,21 @@ function userProfile() {
                         </div>
                         <div className="col-span-1">
                           <h5 className="text-sm sm:text-base md:text-sm lg:text-[14px]">
-                            : {ProData ? ProData.email : "Email"}
+                            : {ProData ? ProData?.email : "Email"}
                           </h5>
                           <h5 className="text-sm sm:text-base md:text-sm lg:text-lg">
                             :{" "}
                             {ProData
-                              ? ProData.location.location.locationQuery.split(
+                              ? ProData?.location?.location?.locationQuery?.split(
                                   " "
                                 )[0]
                               : "Location"}
                           </h5>
                           <h5 className="text-sm sm:text-base md:text-sm lg:text-lg">
-                            : {ProData ? ProData.phone : "Phone"}
+                            : {ProData ? ProData?.phone : "Phone"}
                           </h5>
                           <h5 className="text-sm sm:text-base md:text-sm lg:text-lg">
-                            : ₹ {ProData ? ProData.charge.fulltime : "₹"}
+                            : ₹ {ProData ? ProData?.charge?.fulltime : "₹"}
                           </h5>
                         </div>
                       </div>
@@ -288,10 +289,10 @@ function userProfile() {
                             : 10-10-2022
                           </h5>
                           <h5 className="text-sm sm:text-sm md:text-sm lg:text-lg">
-                            : {ProData ? ProData.category.name : "Category"}
+                            : {ProData ? ProData?.category?.name : "Category"}
                           </h5>
                           <h5 className="text-sm sm:text-sm md:text-[15px] lg:text-[95%]">
-                            : ₹ {ProData ? ProData.charge.partime : "₹"}
+                            : ₹ {ProData ? ProData?.charge?.partime : "₹"}
                           </h5>
                         </div>
                       </div>
@@ -326,7 +327,7 @@ function userProfile() {
                       {Reviews.length > 0 ? (
                         Reviews.slice(0, visibleReviewCount).map((data) => {
                           const date = new Date(data.reviews.date);
-                          const formattedDate = `${date.getDate()}-${
+                          const formattedDate = `${date?.getDate()}-${
                             date.getMonth() + 1
                           }-${date.getFullYear()}`;
                           return (
@@ -335,24 +336,24 @@ function userProfile() {
                               className="flex flex-col space-y-2"
                             >
                               <h4 className="text-sm font-semibold">
-                                {data.category}
+                                {data?.category}
                               </h4>
                               <div className="sm:flex  items-center space-x-1 text-gray-500">
                                 <div className="flex items-start">
-                                  <StarRating rating={data.reviews.star} />
+                                  <StarRating rating={data?.reviews?.star} />
                                 </div>
                                 <span className="text-yellow-500 sm:text-sm pe-2">
-                                  ({data.reviews.star})
+                                  ({data?.reviews?.star})
                                 </span>
                                 <span className="text-sm">{formattedDate}</span>
                               </div>
                               <div className=" max-h-36  px-5 lg:pb-0 overflow-y-auto">
                                 <p className=" w-full text-[85%] ">
-                                  {data.reviews.description}
+                                  {data?.reviews?.description}
                                 </p>
                               </div>
                               <h6 className="text-xs font-medium ps-3">
-                                {data.userID.name}
+                                {data?.userID?.name}
                               </h6>
                               <div className="h-[1px] bg-gray-300"></div>
                             </div>

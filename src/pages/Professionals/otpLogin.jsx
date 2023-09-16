@@ -112,12 +112,12 @@ function otpLogin() {
       <div class="w-2/3 sm:w-3/4 md:w-2/5 mr-2 lg:w-2/5">
         <img src="/bg.png" alt="Your Image" />
       </div>
-      <div class="w-2/3 sm:w-3/4 md:w-3/5 lg:w-2/5">
+      <div class="w-4/5 sm:w-3/4 md:w-3/5 lg:w-2/5">
         <section class=" flex items-center justify-center h-full">
           <div>
             <Toaster toastOptions={{ duration: 4000 }} />
             <div id="recaptcha-container"></div>
-            <div class="w-96 h-96  bg-gray-300 flex flex-col gap-4 items-center rounded-lg p-4 m-10 md:m-10">
+            <div class="sm:w-96 sm:h-96  bg-gray-300 flex flex-col gap-4 items-center rounded-lg p-4 m-auto md:m-10">
               <div class="mt-5">
                 <img src="/loginpage/logo2.png" alt="Your Image" />
               </div>

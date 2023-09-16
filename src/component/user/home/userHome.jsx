@@ -58,7 +58,7 @@ function userHome() {
       .get("/getCategory")
       .then((res) => {
         if (res.data.status) {
-          setcategory(res.data.category);
+          setcategory(res.data?.category);
         } else {
           setcategory("");
         }
@@ -82,7 +82,7 @@ function userHome() {
     const query = event.target.value;
     setSearchQuery(query);
     const filtered = category?.filter((category) =>
-      category.name?.toLowerCase().includes(query.toLowerCase())
+      category?.name?.toLowerCase().includes(query?.toLowerCase())
     );
     setFilteredCategories(filtered);
   };
@@ -105,7 +105,7 @@ function userHome() {
   const searchForm = (e) => {
     e.preventDefault();
     if (
-      Category.toLocaleLowerCase() !== searchQuery.toLocaleLowerCase() ||
+      Category?.toLocaleLowerCase() !== searchQuery?.toLocaleLowerCase() ||
       Category?.trim().length < 3
     ) {
       console.log("Error please fill correct ");
@@ -120,7 +120,7 @@ function userHome() {
   };
   const handleClick = (type) => {
     const filtered = category?.filter((category) =>
-      category.name.toLowerCase().includes(type.toLowerCase())
+      category?.name.toLowerCase().includes(type.toLowerCase())
     );
     const Category = filtered[0].name;
     navigate(`/Services?Category=${encodeURIComponent(Category)}`);
@@ -265,8 +265,8 @@ function userHome() {
                 alt=""
               />
               <div>
-                <h2 className="text-sm">Electricians</h2>
-                <h2 className="text-xs">200 workers</h2>
+                <h2 className="text-sm font-medium">Electricians</h2>
+                {/* <h2 className="text-xs">200 workers</h2> */}
               </div>
             </div>
           </div>
@@ -281,8 +281,8 @@ function userHome() {
                 alt=""
               />
               <div>
-                <h2 className="text-sm">Plumbers</h2>
-                <h2 className="text-xs">200 workers</h2>
+                <h2 className="text-sm font-medium">Plumbers</h2>
+                {/* <h2 className="text-xs">200 workers</h2> */}
               </div>
             </div>
           </div>
@@ -297,8 +297,8 @@ function userHome() {
                 alt=""
               />
               <div>
-                <h2 className="text-sm">Painters</h2>
-                <h2 className="text-xs">200 workers</h2>
+                <h2 className="text-sm font-medium">Painters</h2>
+                {/* <h2 className="text-xs">200 workers</h2> */}
               </div>
             </div>
           </div>
@@ -313,8 +313,8 @@ function userHome() {
                 alt=""
               />
               <div>
-                <h2 className="text-sm">Carpenters</h2>
-                <h2 className="text-xs">200 workers </h2>
+                <h2 className="text-sm font-medium">Carpenters</h2>
+                {/* <h2 className="text-xs">200 workers </h2> */}
               </div>
             </div>
           </div>
@@ -329,8 +329,8 @@ function userHome() {
                 alt=""
               />
               <div>
-                <h2 className="text-sm">A/C Technicians</h2>
-                <h2 className="text-xs">200 workers</h2>
+                <h2 className="text-sm font-medium">A/C Technicians</h2>
+                {/* <h2 className="text-xs">200 workers</h2> */}
               </div>
             </div>
           </div>
@@ -345,8 +345,8 @@ function userHome() {
                 alt=""
               />
               <div>
-                <h2 className="text-sm">Cleaning Service</h2>
-                <h2 className="text-xs">200 workers</h2>
+                <h2 className="text-sm font-medium">Cleaning Service</h2>
+                {/* <h2 className="text-xs">200 workers</h2> */}
               </div>
             </div>
           </div>
@@ -361,8 +361,8 @@ function userHome() {
                 alt=""
               />
               <div>
-                <h2 className="text-sm">Interior Designers</h2>
-                <h2 className="text-xs">200 workers</h2>
+                <h2 className="text-sm font-medium">Interior Designers</h2>
+                {/* <h2 className="text-xs">200 workers</h2> */}
               </div>
             </div>
           </div>
@@ -377,8 +377,8 @@ function userHome() {
                 alt=""
               />
               <div>
-                <h2 className="text-sm">Flooring</h2>
-                <h2 className="text-xs">200 workers</h2>
+                <h2 className="text-sm font-medium">Flooring</h2>
+                {/* <h2 className="text-xs">200 workers</h2> */}
               </div>
             </div>
           </div>
@@ -393,8 +393,8 @@ function userHome() {
                 alt=""
               />
               <div>
-                <h2 className="text-[13px]">General Contractors</h2>
-                <h2 className="text-xs">200 workers</h2>
+                <h2 className="text-[13px] font-medium">General Contractors</h2>
+                {/* <h2 className="text-xs">200 workers</h2> */}
               </div>
             </div>
           </div>
@@ -409,8 +409,8 @@ function userHome() {
                 alt=""
               />
               <div>
-                <h2 className="text-sm">Roofers</h2>
-                <h2 className="text-xs">200 workers</h2>
+                <h2 className="text-sm font-medium">Roofers</h2>
+                {/* <h2 className="text-xs">200 workers</h2> */}
               </div>
             </div>
           </div>
@@ -425,8 +425,8 @@ function userHome() {
                 alt=""
               />
               <div>
-                <h2 className="text-sm">Applience Repair</h2>
-                <h2 className="text-xs">200 workers</h2>
+                <h2 className="text-sm font-medium">Applience Repair</h2>
+                {/* <h2 className="text-xs">200 workers</h2> */}
               </div>
             </div>
           </div>
@@ -441,8 +441,8 @@ function userHome() {
                 alt=""
               />
               <div>
-                <h2 className="text-sm">Landscapers</h2>
-                <h2 className="text-xs">200 workers</h2>
+                <h2 className="text-sm font-medium">Landscapers</h2>
+                {/* <h2 className="text-xs">200 workers</h2> */}
               </div>
             </div>
           </div>

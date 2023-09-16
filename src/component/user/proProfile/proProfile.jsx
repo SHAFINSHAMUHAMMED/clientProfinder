@@ -268,7 +268,7 @@ function proProfile() {
                             </div>
                             <div className="flex-auto text-gray-500 my-1">
                               <span className="mr-3 ">
-                                {proData.category.name}
+                                {proData?.category?.name}
                               </span>
                               <span className="mr-3 border-r border-gray-200  max-h-0"></span>
                               <span>
@@ -391,7 +391,9 @@ function proProfile() {
             <div className="w-full md:w-4/6 p-5 shadow-lg">
               <div className="hidden md:flex justify-between p-5">
                 <div>
-                  <h2 className="text-xl font-bold">{proData.category.name}</h2>
+                  <h2 className="text-xl font-bold">
+                    {proData?.category?.name}
+                  </h2>
                 </div>
                 {avgStar ? (
                   <div className="flex items-start">
@@ -586,36 +588,36 @@ function proProfile() {
 
                 <div className="space-y-4">
                   <h3 className="text-md font-semibold ps-5">
-                    User Reviews ({reviews.length})
+                    User Reviews ({reviews?.length})
                   </h3>
                   <div className="bg-gray-600 h-[2px]"></div>
                   {reviews.length > 0 ? (
-                    reviews.slice(0, visibleReviewCount).map((data) => {
-                      const date = new Date(data.reviews.date);
+                    reviews?.slice(0, visibleReviewCount)?.map((data) => {
+                      const date = new Date(data?.reviews?.date);
                       const formattedDate = `${date.getDate()}-${
                         date.getMonth() + 1
                       }-${date.getFullYear()}`;
                       return (
                         <div key={data._id} className="flex flex-col space-y-2">
                           <h4 className="text-sm font-semibold">
-                            {data.category}
+                            {data?.category}
                           </h4>
                           <div className="sm:flex  items-center space-x-1 text-gray-500">
                             <div className="flex items-start">
-                              <StarRating rating={data.reviews.star} />
+                              <StarRating rating={data?.reviews?.star} />
                             </div>
                             <span className="text-yellow-500 sm:text-sm pe-2">
-                              ({data.reviews.star})
+                              ({data?.reviews?.star})
                             </span>
                             <span className="text-sm">{formattedDate}</span>
                           </div>
                           <div className=" max-h-36  px-5 lg:pb-0 overflow-y-auto">
                             <p className=" w-full text-[85%] ">
-                              {data.reviews.description}
+                              {data?.reviews?.description}
                             </p>
                           </div>
                           <h6 className="text-xs font-medium ps-3">
-                            {data.userID.name}
+                            {data?.userID?.name}
                           </h6>
                           <div className="h-[1px] bg-gray-300"></div>
                         </div>
@@ -627,7 +629,7 @@ function proProfile() {
                     </div>
                   )}
                 </div>
-                {visibleReviewCount < reviews.length && (
+                {visibleReviewCount < reviews?.length && (
                   <div className="flex justify-end p-4">
                     <a
                       className="text-blue-600 hover:underline"
@@ -653,7 +655,7 @@ function proProfile() {
               </button>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 overflow-y-auto h-4/5">
                 {currentImages?.length > 0 ? (
-                  currentImages.map((image) => (
+                  currentImages?.map((image) => (
                     <div
                       key={image._id}
                       className="relative cursor-pointer"
@@ -661,7 +663,7 @@ function proProfile() {
                     >
                       <img
                         className="h-32 w-40 sm:h-64 sm:w-64 rounded-lg m-auto"
-                        src={image.image}
+                        src={image?.image}
                         alt=""
                       />
                     </div>
@@ -684,7 +686,7 @@ function proProfile() {
                     <div className="text-center">
                       <img
                         className="sm:max-h-96 sm:max-w-[500px] rounded-lg m-auto"
-                        src={selectedImage.image}
+                        src={selectedImage?.image}
                         alt=""
                       />
                     </div>

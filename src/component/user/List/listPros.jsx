@@ -54,7 +54,7 @@ function listPros() {
         .then((res) => {
           if (res.data.status) {
             setPros(res.data.pro);
-            setcategory(res.data.category);
+            setcategory(res.data?.category);
           }
         })
         .catch((error) => {
@@ -84,8 +84,8 @@ function listPros() {
     const query = event.target.value;
     setSearchQuery(query);
     const filtered = category
-      ? category.filter((category) =>
-          category.name.toLowerCase().includes(query.toLowerCase())
+      ? category?.filter((category) =>
+          category?.name.toLowerCase().includes(query?.toLowerCase())
         )
       : [];
     setFilteredCategories(filtered);
@@ -126,8 +126,8 @@ function listPros() {
   // filter
   if (categoryQuery) {
     currentPros = pros
-      ? pros.filter((user) => {
-          const hasCat = user.category.name === categoryQuery;
+      ? pros?.filter((user) => {
+          const hasCat = user?.category?.name === categoryQuery;
           const distance = calculateDistance(
             user.location.location.LocId,
             locationCoordinates
@@ -226,9 +226,9 @@ function listPros() {
               </div>
             </div>
           </form>
-          {filteredCategories.length > 0 ? (
+          {filteredCategories?.length > 0 ? (
             <ul className="border border-gray-300 rounded-md overflow-y-auto m-auto max-h-28 w-1/2">
-              {filteredCategories.map((cat) => (
+              {filteredCategories?.map((cat) => (
                 <li
                   key={cat._id}
                   className="px-4 py-2 cursor-pointer hover:bg-gray-100"
@@ -246,20 +246,20 @@ function listPros() {
           )}
         </div>
         <div className="2 flex justify-center mt-10">
-          <div className="content flex-col justify-center p-10 mb-5 bg-gray-100 w-4/6 h-[100vh] overflow-y-scroll">
-            {filteredPros.length > 0 || currentPros.length > 0 ? (
-              filteredPros.length > 0 ? (
+          <div className="content flex-col justify-center p-2 sm:p-10 mb-5 bg-gray-100 w-5/6 md:w-4/6 h-[100vh] rounded-md overflow-y-scroll">
+            {filteredPros?.length > 0 || currentPros?.length > 0 ? (
+              filteredPros?.length > 0 ? (
                 filteredPros.map((pro) => {
                   const rating = pro.rating.stars / pro.rating.TotalReviews;
                   return (
                     <div
                       key={pro._id}
-                      className="bg-blue-100  h-fit p-3 pt-0 mb-1"
+                      className="bg-blue-200  h-fit p-3 pt-0 mb-1 rounded-lg"
                     >
-                      <div className="profile flex p-5 pt-2 pb-0 justify-between">
+                      <div className="profile flex sm:p-5 pt-2 pb-0 justify-between">
                         <div className="flex gap-2 mb-3">
                           <img
-                            className="rounded-full w-10 h-10 bg-black"
+                            className="rounded-full w-8 h-8 sm:w-10 sm:h-10 bg-black"
                             src={pro.image ? pro.image : "/icons/man.png"}
                             alt=""
                           />
@@ -268,14 +268,14 @@ function listPros() {
                               {pro.name}
                             </h4>
                             <h6 className="text-[12px] font-serif">
-                              {pro.category.name}
+                              {pro?.category?.name}
                             </h6>
                             <h6 className="text-[2vh]">
                               {pro.location.location.locationQuery
                                 ? pro.location.location.locationQuery
                                 : "Location"}
                             </h6>
-                            <h6 className="text-[1.8vh]">
+                            <h6 className="ont-medium text-[60%]">
                               Charge ₹{" "}
                               {pro.charge && pro.charge.fulltime
                                 ? pro.charge.fulltime
@@ -296,23 +296,19 @@ function listPros() {
                             </span>
                           </div>
                         ) : (
-                          <div>No Ratings</div>
+                          <div className="text-xs font-normal">No Ratings</div>
                         )}
                       </div>
-                      {/* <div className='flex ps-5 w-3/4 m-auto mb-2'>
-         <span>
-          <h5 className='text-[10px]'>descriptions</h5>
-          </span>
-      </div> */}
-                      <div className="main flex items-center justify-center">
-                        <div className="tags flex text-center gap-2 w-5/6">
+                      <div className="main  sm:flex items-center justify-between">
+                        <div className="tags mb-3 sm:mb-0 flex text-center justify- gap- md:gap-2 w-5/6">
                           {pro.skills?.length > 0 ? (
                             pro.skills.slice(0, 5).map((skill) => (
                               <div
                                 key={skill._id}
-                                className="bg-blue-300 flex items-center justify-center rounded-xl w-24 h-6"
+                                className="bg-blue-300 p-1 sm:p-0 flex items-center justify-center rounded-xl w-10 sm:w-24 sm:h-6"
+
                               >
-                                <h6 className="text-xs ">{skill.skill}</h6>
+                                <h6 className="text-[40%] md:text-xs ">{skill.skill}</h6>
                               </div>
                             ))
                           ) : (
@@ -321,7 +317,7 @@ function listPros() {
                             </div>
                           )}
                         </div>
-
+                        <div className=" ms-[50%] me-[50%] sm:ms-0 sm:me-0 ">
                         <Link
                           to={"/connect"}
                           state={{ proData: pro }}
@@ -329,6 +325,7 @@ function listPros() {
                         >
                           connect
                         </Link>
+                        </div>
                       </div>
                     </div>
                   );
@@ -338,12 +335,12 @@ function listPros() {
                   return (
                     <div
                       key={pro._id}
-                      className="bg-blue-100  h-fit p-3 pt-0 mb-1"
+                      className="bg-blue-200  h-fit p-3 pt-0 mb-1 rounded-lg"
                     >
-                      <div className="profile flex p-5 pt-2 pb-0 justify-between">
+                      <div className="profile flex sm:p-5 pt-2 pb-0 justify-between">
                         <div className="flex gap-2 mb-3">
                           <img
-                            className="rounded-full w-10 h-10 bg-black"
+                            className="rounded-full w-8 h-8 sm:w-10 sm:h-10 bg-black"
                             src={pro.image ? pro.image : "/icons/man.png"}
                             alt=""
                           />
@@ -352,51 +349,46 @@ function listPros() {
                               {pro.name}
                             </h4>
                             <h6 className="text-[12px] font-serif">
-                              {pro.category.name}
+                              {pro?.category?.name}
                             </h6>
                             <h6 className="text-[2vh]">
-                              {pro.location.location.locationQuery
-                                ? pro.location.location.locationQuery
+                              {pro?.location?.location?.locationQuery
+                                ? pro?.location?.location?.locationQuery
                                 : "Location"}
                             </h6>
-                            <h6 className="text-[1.8vh]">
+                            <h6 className=" font-medium text-[60%]">
                               Charge ₹{" "}
-                              {pro.charge && pro.charge.fulltime
-                                ? pro.charge.fulltime
+                              {pro?.charge && pro?.charge?.fulltime
+                                ? pro?.charge?.fulltime
                                 : 0}
                             </h6>
                           </div>
                         </div>
                         {/*StarRating component*/}
-                        {pro.rating.stars ? (
+                        {pro?.rating?.stars ? (
                           <div className="flex items-start">
                             <StarRating
                               rating={
-                                pro.rating.stars / pro.rating.TotalReviews
+                                pro?.rating?.stars / pro?.rating?.TotalReviews
                               }
                             />
                             <span className="text-xs">
-                              ({pro.rating.TotalReviews})
+                              ({pro?.rating?.TotalReviews})
                             </span>
                           </div>
                         ) : (
-                          <div>No Ratings</div>
+                          <div className="text-xs font-normal">No Ratings</div>
                         )}
                       </div>
-                      {/* <div className='flex ps-5 w-3/4 m-auto mb-2'>
-                   <span>
-                    <h5 className='text-[10px]'>descriptions</h5>
-                    </span>
-                </div> */}
-                      <div className="main flex items-center justify-center">
-                        <div className="tags flex text-center gap-2 w-5/6">
+                      <div className="main  sm:flex items-center justify-between">
+                        <div className="tags mb-3 sm:mb-0 flex text-center justify- gap- md:gap-2 w-5/6">
                           {pro.skills?.length > 0 ? (
-                            pro.skills.slice(0, 5).map((skill) => (
+                            pro?.skills?.slice(0, 5).map((skill) => (
                               <div
                                 key={skill._id}
-                                className="bg-blue-300 flex items-center justify-center rounded-xl w-24 h-6"
+                                className="bg-blue-300 p-1 sm:p-0 flex items-center justify-center rounded-xl w-10 sm:w-24 sm:h-6"
                               >
-                                <h6 className="text-xs ">{skill.skill}</h6>
+                                <h6 className="text-[40%] md:text-xs ">{skill?.skill}</h6>
                               </div>
                             ))
                           ) : (
@@ -405,7 +397,7 @@ function listPros() {
                             </div>
                           )}
                         </div>
-
+                            <div className=" ms-[50%] me-[50%] sm:ms-0 sm:me-0 ">
                         <Link
                           to={"/connect"}
                           state={{ proData: pro }}
@@ -413,6 +405,7 @@ function listPros() {
                         >
                           connect
                         </Link>
+                        </div>
                       </div>
                     </div>
                   );

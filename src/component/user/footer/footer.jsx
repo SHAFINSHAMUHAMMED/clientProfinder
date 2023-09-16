@@ -1,6 +1,9 @@
 import React from "react";
+import {  useNavigate } from "react-router-dom";
 
 const Footer = () => {
+  const navigate = useNavigate();
+
   return (
     <section className=" ">
       <img
@@ -15,8 +18,7 @@ const Footer = () => {
       >
         <nav className="flex flex-wrap justify-center -mx-5 -my-2">
           <div className="px-5 py-2">
-            <a
-              href="#"
+            <a onClick={()=>navigate('/')}
               className="text-base leading-6 text-gray-500 hover:text-gray-900"
             >
               About
@@ -24,7 +26,7 @@ const Footer = () => {
           </div>
           <div className="px-5 py-2">
             <a
-              href="#"
+              onClick={()=>navigate('/contact')}
               className="text-base leading-6 text-gray-500 hover:text-gray-900"
             >
               Support
@@ -32,47 +34,15 @@ const Footer = () => {
           </div>
           <div className="px-5 py-2">
             <a
-              href="#"
+              onClick={()=>navigate('/')}
               className="text-base leading-6 text-gray-500 hover:text-gray-900"
             >
               Legal
             </a>
           </div>
-          {/* <div className="px-5 py-2">
-            <a
-              href="#"
-              className="text-base leading-6 text-gray-500 hover:text-gray-900"
-            >
-              Terms
-            </a>
-          </div> */}
         </nav>
-        {/* <div className="flex justify-center mt-0">
-          <form action="">
-            <div className="flex items-center ">
-              <div className=" ">
-                <input
-                  type="text"
-                  className="block min-h-[auto] w-full bg-gray-50 rounded-md border border-gray-400 px-3 py-[0.32rem]"
-                  placeholder="Subscribe"
-                />
-              </div>
-
-              <div className=" ms-3">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 512 512"
-                  width={20}
-                  fill="gray"
-                >
-                  <path d="M16.1 260.2c-22.6 12.9-20.5 47.3 3.6 57.3L160 376V479.3c0 18.1 14.6 32.7 32.7 32.7c9.7 0 18.9-4.3 25.1-11.8l62-74.3 123.9 51.6c18.9 7.9 40.8-4.5 43.9-24.7l64-416c1.9-12.1-3.4-24.3-13.5-31.2s-23.3-7.5-34-1.4l-448 256zm52.1 25.5L409.7 90.6 190.1 336l1.2 1L68.2 285.7zM403.3 425.4L236.7 355.9 450.8 116.6 403.3 425.4z" />
-                </svg>
-              </div>
-            </div>
-          </form>
-        </div> */}
         <div className="flex justify-center mt-8 space-x-6">
-          <a href="#" className="text-gray-400 hover:text-gray-500">
+          <a href="http://www.facebook.com" className="text-gray-400 hover:text-gray-500">
             <span className="sr-only">Facebook</span>
             <svg
               className="w-6 h-6"
@@ -87,7 +57,7 @@ const Footer = () => {
               ></path>
             </svg>
           </a>
-          <a href="#" className="text-gray-400 hover:text-gray-500">
+          <a href="http://www.instagram.com" className="text-gray-400 hover:text-gray-500">
             <span className="sr-only">Instagram</span>
             <svg
               className="w-6 h-6"
@@ -102,7 +72,7 @@ const Footer = () => {
               ></path>
             </svg>
           </a>
-          <a href="#" className="text-gray-400 hover:text-gray-500">
+          <a href="http://www.twitter.com" className="text-gray-400 hover:text-gray-500">
             <span className="sr-only">Twitter</span>
             <svg
               className="w-6 h-6"
@@ -113,7 +83,7 @@ const Footer = () => {
               <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
             </svg>
           </a>
-          <a href="#" className="text-gray-400 hover:text-gray-500">
+          <a href="https://github.com/SHAFINSHAMUHAMMED" className="text-gray-400 hover:text-gray-500">
             <span className="sr-only">GitHub</span>
             <svg
               className="w-6 h-6"

@@ -111,7 +111,7 @@ function EditProfile({
     try {
       const res = await proAxios.get("/listCat");
       if (res.data.status) {
-        setCat(res.data.category);
+        setCat(res?.data?.category);
       } else {
         navigate("/professional/login");
       }

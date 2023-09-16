@@ -39,7 +39,7 @@ function RegisterPro() {
     try {
       const res = await professionalsAxios.get("/listCat");
       if (res.data.status) {
-        setCat(res.data.category);
+        setCat(res?.data?.category);
       } else {
         navigate("/professional/login");
       }
@@ -56,15 +56,15 @@ function RegisterPro() {
   const handleSearchChange = (event) => {
     const query = event.target.value;
     setSearchQuery(query);
-    const filtered = Cat.filter((category) =>
-      category.name.toLowerCase().includes(query.toLowerCase())
+    const filtered = Cat?.filter((category) =>
+      category?.name.toLowerCase().includes(query?.toLowerCase())
     );
     setFilteredCategories(filtered);
   };
   const handleCategorySelection = (categoryName) => {
     setCategory(categoryName);
     setSearchQuery(categoryName);
-    setFilteredCategories(""); // Clear the search query after selecting a category
+    setFilteredCategories(""); 
   };
 
   const sendId = (id) => {
@@ -83,28 +83,28 @@ function RegisterPro() {
     const partTime = PartTimeref.current.value;
     const password = Passwordref.current.value;
     // Validation
-    if (!name || name.trim().length < 4) {
+    if (!name || name?.trim()?.length < 4) {
       setErrMsg("Enter Valid Name.");
       return;
     }
 
-    if (!email || email.trim().length < 5) {
+    if (!email || email?.trim()?.length < 5) {
       setErrMsg("Email is required.");
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email.trim())) {
+    if (!emailRegex.test(email?.trim())) {
       setErrMsg("Invalid email format.");
       return;
     }
 
-    if (!phone || !/^\d{10}$/.test(phone.toString().trim())) {
+    if (!phone || !/^\d{10}$/.test(phone?.toString().trim())) {
       setErrMsg("Phone must be a 10-digit number.");
       return;
     }
 
-    if (Category.toLocaleLowerCase() !== searchQuery.toLocaleLowerCase()) {
+    if (Category?.toLocaleLowerCase() !== searchQuery?.toLocaleLowerCase()) {
       setErrMsg("Please Choose a valid Category");
       return;
     }
@@ -112,15 +112,15 @@ function RegisterPro() {
       setErrMsg("Please Choose Location");
       return;
     }
-    if (!fullTime || fullTime.toString().trim().length < 3) {
+    if (!fullTime || fullTime?.toString()?.trim()?.length < 3) {
       setErrMsg("Please Enter a valid Rate");
       return;
     }
-    if (!partTime || partTime.toString().trim().length < 3) {
+    if (!partTime || partTime?.toString()?.trim()?.length < 3) {
       setErrMsg("Please Enter a valid Rate");
       return;
     }
-    if (!password || password.toString().trim().length < 6) {
+    if (!password || password?.toString()?.trim()?.length < 6) {
       setErrMsg("Password must be at least 6 characters long.");
       return;
     }
@@ -292,18 +292,18 @@ function RegisterPro() {
                 placeholder="Search category..."
               />
             </div>
-            {filteredCategories.length > 0 ? (
+            {filteredCategories?.length > 0 ? (
               <ul className="border border-gray-300 rounded-md overflow-y-auto max-h-36">
-                {filteredCategories.map((category) => (
+                {filteredCategories?.map((category) => (
                   <li
                     key={category._id}
                     className="px-4 py-2 cursor-pointer hover:bg-gray-100"
                     onClick={() => {
-                      handleCategorySelection(category.name),
+                      handleCategorySelection(category?.name),
                         sendId(category._id);
                     }}
                   >
-                    {category.name}
+                    {category?.name}
                   </li>
                 ))}
               </ul>
