@@ -34,6 +34,7 @@ export const userState = createSlice({
             state.UserName= ""
             state.location= ""
             state.Image=""
+            state.Id=""
         }
     },
 

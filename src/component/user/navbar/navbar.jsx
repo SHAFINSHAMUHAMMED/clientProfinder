@@ -32,6 +32,7 @@ export default function Example() {
   if (username) {
     userid = useSelector((state) => state.user.Id);
   }
+  console.log(userid);
   // const isTokenExpired = () => {
   //   const token = Cookies.get("token");
   //   if (token) {
