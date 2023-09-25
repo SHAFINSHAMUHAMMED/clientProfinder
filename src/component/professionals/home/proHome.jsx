@@ -19,45 +19,49 @@ function proHome() {
   const [ProData, setProData] = useState("");
   const [Orders, setOrders] = useState([]);
   const [UpcomingWorks, setUpcomingWorks] = useState([]);
-  const isTokenExpired = () => {
-    const token = Cookies.get("token");
-    if (token) {
-      const decodedToken = decodeJwt(token);
-      const currentTimestamp = Date.now() / 1000;
-      return decodedToken.exp < currentTimestamp;
-    }
-    return true; // If there's no token, it is expired
-  };
+  // const isTokenExpired = () => {
+  //   const token = Cookies.get("token");
+  //   if (token) {
+  //     const decodedToken = decodeJwt(token);
+  //     const currentTimestamp = Date.now() / 1000;
+  //     return decodedToken.exp < currentTimestamp;
+  //   }
+  //   return true; // If there's no token, it is expired
+  // };
   useEffect(() => {
-    const expired = isTokenExpired();
-    if (expired) {
-      dispatch(proLogout());
-      navigate("/professional/");
-    } else {
-      fetchProDetails();
-    }
+    // const expired = isTokenExpired();
+    // if (expired) {
+    //   dispatch(proLogout());
+    //   navigate("/professional/");
+    // } else {
+    // }
+    fetchProDetails();
   }, [navigate, dispatch, token]);
   const fetchProDetails = async () => {
     try {
-      const response = await professionalsAxios.get(
-        `/proDetails?proId=${proId}`
-      );
-      const data = response.data.data;
-      const orders = response.data.bookings;
-      const sortedOrders = orders.slice().sort((a, b) => {
-        return new Date(a.date) - new Date(b.date);
-      });
-      setProData(data);
-      setOrders(sortedOrders);
-      const today = new Date().toISOString().split("T")[0];
-      const upcoming = sortedOrders.filter((order) => {
-        const orderDate = order.date.split("T")[0]; // Extract only the date part
-        return orderDate > today && order.work_status.status !== "cancelled";
-      });
-      const firstTwoUpcomingWorks = upcoming.slice(0, 2);
+      if (proId) {
+        const response = await professionalsAxios.get(
+          `/proDetails?proId=${proId}`
+        );
+        const data = response.data.data;
+        const orders = response.data.bookings;
+        const sortedOrders = orders.slice().sort((a, b) => {
+          return new Date(a.date) - new Date(b.date);
+        });
+        setProData(data);
+        setOrders(sortedOrders);
+        const today = new Date().toISOString().split("T")[0];
+        const upcoming = sortedOrders.filter((order) => {
+          const orderDate = order.date.split("T")[0]; // Extract only the date part
+          return orderDate > today && order.work_status.status !== "cancelled";
+        });
+        const firstTwoUpcomingWorks = upcoming.slice(0, 2);
 
-      setUpcomingWorks(firstTwoUpcomingWorks);
-      setIsLoading(false);
+        setUpcomingWorks(firstTwoUpcomingWorks);
+        setIsLoading(false);
+      } else {
+        navigate("/professional/login");
+      }
     } catch (error) {
       console.error("Error fetching details:", error);
       setIsLoading(false);

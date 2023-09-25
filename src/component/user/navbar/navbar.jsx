@@ -32,15 +32,15 @@ export default function Example() {
   if (username) {
     userid = useSelector((state) => state.user.Id);
   }
-  const isTokenExpired = () => {
-    const token = Cookies.get("token");
-    if (token) {
-      const decodedToken = decodeJwt(token);
-      const currentTimestamp = Date.now() / 1000;
-      return decodedToken.exp < currentTimestamp;
-    }
-    return true; // If there's no token, it is expired
-  };
+  // const isTokenExpired = () => {
+  //   const token = Cookies.get("token");
+  //   if (token) {
+  //     const decodedToken = decodeJwt(token);
+  //     const currentTimestamp = Date.now() / 1000;
+  //     return decodedToken.exp < currentTimestamp;
+  //   }
+    // return true; // If there's no token, it is expired
+  // };
   // useEffect(() => {
   //   const expired = isTokenExpired();
   //   if (expired) {
@@ -249,13 +249,6 @@ export default function Example() {
                   </Transition>
                 </Menu>
                 {/* end of profile dropdown */}
-                {/* <button
-              type="button"
-              className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-            >
-              <span className="sr-only">View notifications</span>
-              <BellIcon className="h-6 w-6" aria-hidden="true" />
-            </button> */}
                 {username ? (
                   <div>
                     <h3 className="text-gray-70000 ms-3  sm:block text-xs sm:text-base md:text-base">
@@ -264,7 +257,7 @@ export default function Example() {
                   </div>
                 ) : (
                   <div>
-                    <h3 className="text-white ms-3 hidden sm:block text-base md:text-base">
+                    <h3 className="text-gray-300 ms-3 hidden sm:block text-base md:text-base">
                       UserName
                     </h3>
                   </div>

@@ -16,9 +16,12 @@ function Chats({ userType, senderId }) {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState(null);
   const [Typing, setTyping] = useState(false);
-  const [Read, setRead] = useState(false);
+  const [Room, setRoom] = useState(null);
   const [state, setState] = useState(false);
   const [isRead, setIsRead] = useState(false);
+  const [TyperId, setTyperId] = useState(null);
+  const [senderTyping, setSenderTyping] = useState(false);
+  const [Chatters, setChatters] = useState(null)
   const messageHolder = useRef(null);
   const proAxios = AxiosInstance();
   const userAxios = UserAxiosInstance();
@@ -90,7 +93,6 @@ function Chats({ userType, senderId }) {
     axios
       .get(`/listChat?id=${senderId}&type=${userType}`)
       .then((res) => {
-        console.log(res.data.list);
         setChatList(res.data.list);
       })
       .catch((error) => {
@@ -118,27 +120,30 @@ function Chats({ userType, senderId }) {
   }, [state]);
 
   useEffect(() => {
-    // const newSocket = io("http://localhost:4000/chat");
-    const newSocket = io("https://api.profinder.site/chat");
+    const newSocket = io("http://localhost:4000/chat");
+    // const newSocket = io("https://api.profinder.site/chat");
 
     setSocket(newSocket);
     newSocket.on("connect", () => {
       console.log("Connected to socket server");
-      newSocket.emit("setup", Id);
+      newSocket.emit("setup", Id,storeId);
     });
-
-    newSocket.on("messageResponse", (messageData, receivedChatId) => {
+    // newSocket.emit("read", Id, storeId);
+    newSocket.on("messageResponse", (messageData, receivedChatId,storeId) => {
       if (Id === receivedChatId) {
+          if (messageData.senderId !== senderId) {
+            messageData.is_read = true;
+
+          }
         setMessages((prevMessages) => [...prevMessages, messageData]);
         setState(!state);
       }
     });
-
     return () => {
       // Clean up socket connection
       if (newSocket) newSocket.disconnect();
     };
-  }, [Id]);
+  }, [Id,]);
 
   useEffect(() => {
     if (socket) {
@@ -147,20 +152,24 @@ function Chats({ userType, senderId }) {
         socket.emit("setup", Id);
       });
 
-      socket.on("readResponse", (receivedChatId) => {
+      socket.on("readResponse", (receivedChatId,storeId) => {
         if (Id === receivedChatId) {
           console.log(`Chat marked as read`);
-          setIsRead(true);
+          setIsRead(!isRead);
         }
       });
+      socket.on("typing", (isTyping, Id, storeId) => {
+        setSenderTyping(isTyping);
+        setTyperId(storeId);
+        setRoom(Id);
+      });
     }
-  }, [socket, Id]);
+  }, [socket, Id,isRead]);
 
   const sendMessage = () => {
     if (!message || !message.trim()) {
       return;
     }
-
     const newMessage = {
       text: message,
       senderType: userType,
@@ -169,7 +178,7 @@ function Chats({ userType, senderId }) {
     };
 
     if (socket && Id) {
-      socket.emit("newMessage", newMessage, Id);
+      socket.emit("newMessage", newMessage, Id,storeId);
       socket.emit("read", Id, storeId);
     }
 
@@ -185,16 +194,25 @@ function Chats({ userType, senderId }) {
 
   const chatHandle = (chatId) => {
     setTyping(true);
-    // Mark the messages read in the backend
+    // Mark the messages as read in the backend
     axios
       .get(`/loadChat?chatId=${chatId}`)
       .then((res) => {
         if (res) {
           setproData(res.data.chat.professional);
           setuserData(res.data.chat.user);
-          setMessages(res.data.chat.messages);
+  
+          const updatedMessages = res.data.chat.messages.map((message) => {
+            if (message.senderId !== senderId) {
+              message.is_read = true;
+            }
+            return message;
+          });
+          setMessages(updatedMessages);
           setChatId(res.data.chat._id);
-          socket.emit("read", chatId, storeId);
+          if (socket) {
+            socket.emit("read", chatId, storeId);
+          }
         } else {
           console.log(error);
         }
@@ -264,33 +282,6 @@ function Chats({ userType, senderId }) {
                             : "null"}
                         </h1>
                         <div className="flex gap-2 items-center">
-                          {list.messages ? (
-                            list.messages[list.messages.length - 1] ? (
-                              list.messages[list.messages.length - 1]
-                                .is_read ? (
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  height="10px"
-                                  viewBox="0 0 448 512"
-                                  fill="#1D03FC"
-                                >
-                                  <path d="M342.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 178.7l-57.4-57.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l80 80c12.5 12.5 32.8 12.5 45.3 0l160-160zm96 128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 402.7 54.6 297.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l256-256z" />
-                                </svg>
-                              ) : (
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  height="10px"
-                                  viewBox="0 0 448 512"
-                                >
-                                  <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
-                                </svg>
-                              )
-                            ) : (
-                              ""
-                            )
-                          ) : (
-                            ""
-                          )}
                           <small className="text-xs text-gray-300">
                             {list.messages
                               ? list.messages[list.messages.length - 1]
@@ -299,6 +290,13 @@ function Chats({ userType, senderId }) {
                               : ""}
                           </small>
                         </div>
+                        {senderTyping &&
+                          TyperId !== senderId &&
+                          Room == list._id && (
+                            <div className=" text-green-400">
+                              <small>typing...</small>
+                            </div>
+                          )}
                       </div>
                       <div className="md:mr-[2%] text-end w-full  flex-col h-full">
                         <p className="text-xs text-gray-400">
@@ -362,6 +360,23 @@ function Chats({ userType, senderId }) {
                                   <div className="break-words">
                                     {message ? message.text : ""}
                                   </div>
+                                  <div className="flex items-center">
+                                    {message.is_read ? (
+                                  <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  height="10px"
+                                  viewBox="0 0 448 512"
+                                  fill="#1D03FC"
+                                >
+                                  <path d="M342.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 178.7l-57.4-57.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l80 80c12.5 12.5 32.8 12.5 45.3 0l160-160zm96 128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 402.7 54.6 297.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l256-256z" />
+                                </svg>
+                                ):(<svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  height="10px"
+                                  viewBox="0 0 448 512"
+                                >
+                                  <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+                                </svg>)}
                                   <small className="text-[80%] text-gray-400">
                                     {" "}
                                     {new Date(
@@ -372,6 +387,7 @@ function Chats({ userType, senderId }) {
                                       hour12: true,
                                     })}
                                   </small>
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -399,7 +415,25 @@ function Chats({ userType, senderId }) {
                                   <div className="break-words">
                                     {message?.text}
                                   </div>
+                                  <div className="flex items-center">
+                                    {message.is_read ? (
+                                  <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  height="10px"
+                                  viewBox="0 0 448 512"
+                                  fill="#1D03FC"
+                                >
+                                  <path d="M342.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 178.7l-57.4-57.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l80 80c12.5 12.5 32.8 12.5 45.3 0l160-160zm96 128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L160 402.7 54.6 297.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l256-256z" />
+                                </svg>
+                                ):(<svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  height="10px"
+                                  viewBox="0 0 448 512"
+                                >
+                                  <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+                                </svg>)}
                                   <small className="text-[80%] text-gray-400">
+                                    {" "}
                                     {new Date(
                                       message?.timestamp
                                     ).toLocaleString("en-US", {
@@ -408,6 +442,7 @@ function Chats({ userType, senderId }) {
                                       hour12: true,
                                     })}
                                   </small>
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -425,10 +460,17 @@ function Chats({ userType, senderId }) {
                     <div className="flex-grow sm:ml-4">
                       <div className="relative w-full">
                         <input
-                          onChange={(e) => setMessage(e.target.value)}
+                          onChange={(e) => {
+                            setMessage(e.target.value);
+                            const isTyping = e.target.value.trim() !== ""; // Check if the input field is not empty
+                            socket.emit("typing", isTyping, Id, storeId); // Emit the typing event based on input field status
+                          }}
+                          onBlur={() => {
+                            socket.emit("typing", false, Id, storeId); // Emit typing event when input field loses focus
+                          }}
                           value={message}
                           type="text"
-                          className="flex w-full  rounded-xl ms-2 focus:outline-none focus:border-indigo-300 sm:pl-4 h-10"
+                          className="flex w-full rounded-xl ms-2 focus:outline-none focus:border-indigo-300 sm:pl-4 h-10"
                           placeholder="Type your message..."
                         />
                       </div>

@@ -15,7 +15,7 @@ function contactUs() {
         <div>
             <h2 className='text-xl text-blue-600 font-semibold font-mono'>contact</h2>
             <h2 className='font-normal text-blue-700'>profinder@pro.com</h2>
-            <h2 className='font-normal text-blue-700'>7899877899</h2>
+            <h2 className='font-normal text-blue-700'>7907165805</h2>
         </div>
         <div>
             <h2 className='text-xl text-blue-600 font-semibold font-mono mt-4 sm:mt-0'>Based In</h2>
