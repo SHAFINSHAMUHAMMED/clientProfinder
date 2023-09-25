@@ -120,8 +120,8 @@ function Chats({ userType, senderId }) {
   }, [state]);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:4000/chat");
-    // const newSocket = io("https://api.profinder.site/chat");
+    // const newSocket = io("http://localhost:4000/chat");
+    const newSocket = io("https://api.profinder.site/chat");
 
     setSocket(newSocket);
     newSocket.on("connect", () => {
