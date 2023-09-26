@@ -5,8 +5,8 @@ import { UserLogout } from "../../../Redux/userState";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import userAxiosInstance from "../../../Axios/userAxios";
-import Cookies from "js-cookie";
-import { decodeJwt } from "jose";
+// import Cookies from "js-cookie";
+// import { decodeJwt } from "jose";
 
 export default function Example() {
   const navigation = [
@@ -28,11 +28,10 @@ export default function Example() {
   const userPhoto = useSelector((state) => state.user.Image);
   username = useSelector((state) => state.user.UserName);
   const userAxios = userAxiosInstance();
-  let userid = null;
-  if (username) {
-    userid = useSelector((state) => state.user.Id);
-  }
-  console.log(userid);
+  // let userid = null;
+  // if (username) {
+  const userid = useSelector((state) => state.user.Id);
+  // }
   // const isTokenExpired = () => {
   //   const token = Cookies.get("token");
   //   if (token) {
