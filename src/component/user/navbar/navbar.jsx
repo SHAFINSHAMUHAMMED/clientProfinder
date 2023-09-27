@@ -30,7 +30,7 @@ export default function Example() {
   const userAxios = userAxiosInstance();
   // let userid = null;
   // if (username) {
-  const userid = useSelector((state) => state.user.Id);
+  let userid = useSelector((state) => state.user.Id);
   // }
   // const isTokenExpired = () => {
   //   const token = Cookies.get("token");
@@ -48,16 +48,18 @@ export default function Example() {
   //     navigate("/login");
   //   }
   // }, []);
-  const logout = () => {
+  const logout = async () => {
     if (username) {
       dispatch(UserLogout());
       userid = null;
-      setuserData("");
+      setuserData(null);
       navigate("/login");
     } else {
       navigate("/login");
     }
   };
+  
+
   const updatedNavigation = navigation.map((item, index) => ({
     ...item,
     current: index === activeIndex,

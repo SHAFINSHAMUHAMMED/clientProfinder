@@ -135,8 +135,8 @@ function Chats({ userType, senderId }) {
             messageData.is_read = true;
 
           }
-        setMessages((prevMessages) => [...prevMessages, messageData]);
-        setState(!state);
+          setMessages((prevMessages) => [...prevMessages, messageData]);
+          // setState(!state);
       }
     });
     return () => {
@@ -154,7 +154,6 @@ function Chats({ userType, senderId }) {
 
       socket.on("readResponse", (receivedChatId,storeId) => {
         if (Id === receivedChatId) {
-          console.log(`Chat marked as read`);
           setIsRead(!isRead);
         }
       });
@@ -175,6 +174,7 @@ function Chats({ userType, senderId }) {
       senderType: userType,
       senderId: senderId,
       timestamp: Date.now(),
+      is_read:false,
     };
 
     if (socket && Id) {
@@ -361,7 +361,7 @@ function Chats({ userType, senderId }) {
                                     {message ? message.text : ""}
                                   </div>
                                   <div className="flex items-center">
-                                    {message.is_read ? (
+                                    {/* {message.is_read ? (
                                   <svg
                                   xmlns="http://www.w3.org/2000/svg"
                                   height="10px"
@@ -376,7 +376,7 @@ function Chats({ userType, senderId }) {
                                   viewBox="0 0 448 512"
                                 >
                                   <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
-                                </svg>)}
+                                </svg>)} */}
                                   <small className="text-[80%] text-gray-400">
                                     {" "}
                                     {new Date(
@@ -416,7 +416,7 @@ function Chats({ userType, senderId }) {
                                     {message?.text}
                                   </div>
                                   <div className="flex items-center">
-                                    {message.is_read ? (
+                                    {/* {message.is_read ? (
                                   <svg
                                   xmlns="http://www.w3.org/2000/svg"
                                   height="10px"
@@ -431,7 +431,7 @@ function Chats({ userType, senderId }) {
                                   viewBox="0 0 448 512"
                                 >
                                   <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
-                                </svg>)}
+                                </svg>)} */}
                                   <small className="text-[80%] text-gray-400">
                                     {" "}
                                     {new Date(

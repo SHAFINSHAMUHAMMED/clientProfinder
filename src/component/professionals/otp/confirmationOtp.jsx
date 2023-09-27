@@ -59,7 +59,6 @@ function confirmationOtp({
     const appVerifier = recaptchaVerifierRef.current;
 
     const formatPh = "+91" + phone;
-    console.log(formatPh);
     try {
       isSigningInRef.current = true;
       const confirmationResult = await signInWithPhoneNumber(

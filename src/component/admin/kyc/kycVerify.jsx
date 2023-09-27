@@ -54,7 +54,6 @@ function kycVerify() {
   };
 
   const handleViewImage = (imageURL) => {
-    console.log(imageURL);
     setSelectedImage(imageURL);
     setIsModalOpen(true);
   };

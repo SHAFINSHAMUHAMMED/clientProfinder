@@ -148,19 +148,6 @@ function login() {
                 Login with-OTP
               </Link>
             </div>
-
-            {/* <GoogleLogin
-              onSuccess={(credentialResponse) => {
-                console.log(credentialResponse);
-                const { credential } = credentialResponse;
-                const payload = credential ? decodeJwt(credential) : undefined;
-                if (payload) {
-                  LoginWithGoogle(payload);
-                }
-              }}
-              onError={(error) => console.log(error)}
-              useOneTap
-            /> */}
             <div className="mt-5">
               <Link
                 to={"/professional/register"}

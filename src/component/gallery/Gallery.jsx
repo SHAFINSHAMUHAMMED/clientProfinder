@@ -83,7 +83,6 @@ function Gallery() {
     const formData = new FormData();
     formData.append("proId", proId);
     for (let i = 0; i < selectedImages.length; i++) {
-      console.log(selectedImages[i]);
       formData.append(`file`, selectedImages[i]);
     }
     proAxios
@@ -231,7 +230,6 @@ function Gallery() {
           </div>
         </div>
       )}
-      {/* {console.log(Gallery.gallery.length)} */}
       <Pagination
         currentPage={currentPage}
         totalPages={Math.ceil(Gallery.gallery?.length / imgPerPage)}
