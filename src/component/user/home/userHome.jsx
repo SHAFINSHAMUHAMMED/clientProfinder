@@ -127,9 +127,9 @@ function userHome() {
   };
 
   return (
-    <div className=" w-full ">
+    <div className=" w-full flex flex-col items-center justify-center ">
       <div
-        className="absolute right-1 sm:right-10"
+        className="absolute top-20 right-1 sm:right-10"
         onClick={handleOpenLocationPopup}
       >
         <div className="relative inline-flex items-center">
@@ -151,14 +151,14 @@ function userHome() {
         </div>
       </div>
 
-      <div className="flex  w-full h-[20%] sm:h-[30%] md:h-[48%]">
+      <div className="flex justify-center   w-[1280px] h-[500px] sm:h-[30%] md:h-[600px]">
         <img
-          className="w-full "
+          className="w-[1180px] "
           src={carouselImages[currentImageIndex]}
           alt="Image"
         />
 
-        <div className=" absolute text-left ml-2 lg:ml-11 lg:mt-16 xl:ml-28 xl:mt-28 max-w-sm md:max-w-screen-lg">
+        <div className=" absolute text-left  lg:mt-16 xl:mt-28 ">
           <div className="Heading1 text-blue-600 text-sm font-semibold capitalize leading-loose">
             We Have 1000+ Professionals
           </div>
